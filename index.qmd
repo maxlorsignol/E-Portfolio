@@ -16,6 +16,8 @@ about:
       href: mailto:maxlorsignol@gmail.com
 ---
 
-Hey there,
+Hi, my name is Max Lorsignol.
 
-Max Lorsignol specializes in geomatics, remote sensing, and environmental management, dedicated to leveraging spatial data for sustainable solutions and impactful environmental research. When not working, Max enjoys exploring the outdoors through mountaineering, hiking, and woodworking, blending a love for nature with hands-on creativity.
+I am currently pursuing a Master's degree in Geomatics for Environmental Management at UBC. What is geomatics, you ask? In a nutshell, geomatics is the science and technology of collecting, analyzing, managing, and visualizing spatial data. Ever since I was a child, I’ve been fascinated by the maps my father used for his mountaineering adventures. Today, I’m leveraging that lifelong love for mapping and applying it to modern tools and standards.
+
+When I’m not crafting digital maps or spatial analyses, you’ll find me outdoors, navigating the rugged mountains of the west coast with the same passion for exploration. My goal is to combine the skills I’ve developed through my education and personal experiences to address pressing issues related to environmental management, natural resources, climate change, and land use management. I hope to make a meaningful difference in creating sustainable solutions for the challenges our world faces today.
