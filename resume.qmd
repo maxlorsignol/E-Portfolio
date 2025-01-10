@@ -4,37 +4,33 @@ title: "Resume"
 
 # Education
 
--   List your education here. 
+-   B.Sc Earth and Environmental Science UBC Okanagan
+-   Masters in Geomatics for Environmental Management UBC Vancouver
 
 # Publications
 
-*Peer-reviewed publications:*
-
-- List any peer-reviewed publications here.
-
 *Reports:*
 
-- List any non-peer reviewed materials you'd like to share here.
+-   FCOR 599 OECM Land Designation in Howe Sound Biosphere.
 
 # Conferences & Talks
 
 *Invited Talks*
 
-- If you've been invited to speak in a professional setting, list that here. 
+-   If you've been invited to speak in a professional setting, list that here.
 
 *Conference Presentations*
 
-- If the presentation was at a conference, list them here. 
+-   If the presentation was at a conference, list them here.
 
 # Awards & Honors
 
-- List any scholarships, bursaries, etc. 
-
+-   List any scholarships, bursaries, etc.
 
 # Teaching Assistantships
 
-- List any TA positions you may have held. 
+-   List any TA positions you may have held.
 
 # Institutional Service
 
-- Volunteering etc. 
+-   Volunteering etc.
