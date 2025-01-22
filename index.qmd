@@ -1,6 +1,6 @@
 ---
 title: "Max Lorsignol E-Portfolio"
-image: images/Headshot.png
+image: images/headshot_1.png
 about:
   template: trestles
   image-width: 20em

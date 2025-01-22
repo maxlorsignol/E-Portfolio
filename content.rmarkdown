@@ -4,6 +4,9 @@ format: html
 editor: visual
 ---
 
+
+
+
 # Project 1 - Capstone Deliverables
 
 This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a "mesh sensitivity layer" that integrates critical habitat data, forest age (\>200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.
@@ -13,6 +16,9 @@ Spatial analysis, guided by a decision support tool, evaluates parcels based on 
 ## OECM Land Suitability Mesh Layer
 
 Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.
+
+
+
 
 ```{r leaflet, include = FALSE}
 library(dplyr); library(leaflet); library(sf)
@@ -48,5 +54,9 @@ main_map <- leaflet(oecm_data) %>%
 main_map
 ```
 
+
+
+
 # Other Projects
+
 

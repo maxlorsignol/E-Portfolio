@@ -1,4 +1,32 @@
 ---
+title: "content_backup"
+author: "maxlorsignol"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+## Running Code
+
+When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
+
+```{r}
+1 + 1
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+---
 title: "Content & Deliverables"
 format: html
 editor: visual
@@ -48,5 +76,32 @@ main_map <- leaflet(oecm_data) %>%
 main_map
 ```
 
-# Other Projects
+## Code Snippets
 
+Sample code snippet. Notice that you can provide a toggle to switch between coding languages - this is referred to as a 'tabset' in quarto. It is good practice to try and convert your R code to python, and vice-versa to demonstrate coding proficiency. For example, let's showcase a function for calculating NDVI in R and Python.
+
+::: {.panel-tabset group="language"}
+## R
+
+``` (.r)
+calc_ndvi <- function(nir, red){ ndvi <- (nir-red)/(nir+red) return(ndvi) }
+```
+
+## Python
+
+``` (.python)
+def calc_ndvi(nir, red): 
+  ndvi = (nir.astype(float)-red.astype(float))/(nir.astype(float)+red.astype(float))
+  return(ndvi)
+```
+:::
+
+## External links
+
+We can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available [here](https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool) in case you're interested.
+
+(To use the GEE tool, navigate to any city you'd like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)
+
+```{=html}
+<iframe width="900" height="700" src="https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool" title="Webpage example"></iframe>
+```
