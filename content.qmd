@@ -48,5 +48,9 @@ main_map <- leaflet(oecm_data) %>%
 main_map
 ```
 
-# Other Projects
+## BC Fabric Parcel Selection
+
+Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change.
+
+
 

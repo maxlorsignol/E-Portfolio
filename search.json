@@ -32,7 +32,7 @@
     "href": "content.html",
     "title": "Content & Deliverables",
     "section": "",
-    "text": "This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a “mesh sensitivity layer” that integrates critical habitat data, forest age (&gt;200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.\nSpatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.\n\n\nSample leaflet - for detailed leaflet instructions, visit the FCOR 599 workshop archive page here.\n\nmain_map\n\n\n\n\n\n\n\n\nSample code snippet. Notice that you can provide a toggle to switch between coding languages - this is referred to as a ‘tabset’ in quarto. It is good practice to try and convert your R code to python, and vice-versa to demonstrate coding proficiency. For example, let’s showcase a function for calculating NDVI in R and Python.\n\nRPython\n\n\ncalc_ndvi &lt;- function(nir, red){ ndvi &lt;- (nir-red)/(nir+red) return(ndvi) }\n\n\ndef calc_ndvi(nir, red): \n  ndvi = (nir.astype(float)-red.astype(float))/(nir.astype(float)+red.astype(float))\n  return(ndvi)\n\n\n\n\n\n\nWe can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available here in case you’re interested.\n(To use the GEE tool, navigate to any city you’d like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)"
+    "text": "This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a “mesh sensitivity layer” that integrates critical habitat data, forest age (&gt;200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.\nSpatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.\n\n\nEach hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\nmain_map\n\n\n\n\n\n\n\n\nUsing the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
   },
   {
     "objectID": "content.html#leaflet",
@@ -54,5 +54,61 @@
     "title": "Content & Deliverables",
     "section": "",
     "text": "We can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available here in case you’re interested.\n(To use the GEE tool, navigate to any city you’d like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)"
+  },
+  {
+    "objectID": "content.html#oecm-land-suitability-mesh-layer",
+    "href": "content.html#oecm-land-suitability-mesh-layer",
+    "title": "Content & Deliverables",
+    "section": "",
+    "text": "Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\nmain_map"
+  },
+  {
+    "objectID": "content.html#bc-fabric-parcel-selection",
+    "href": "content.html#bc-fabric-parcel-selection",
+    "title": "Content & Deliverables",
+    "section": "",
+    "text": "Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
+  },
+  {
+    "objectID": "backup_content.html",
+    "href": "backup_content.html",
+    "title": "Content & Deliverables",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "backup_content.html#quarto",
+    "href": "backup_content.html#quarto",
+    "title": "Content & Deliverables",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "backup_content.html#running-code",
+    "href": "backup_content.html#running-code",
+    "title": "Content & Deliverables",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "backup_content.html#oecm-land-suitability-mesh-layer",
+    "href": "backup_content.html#oecm-land-suitability-mesh-layer",
+    "title": "Content & Deliverables",
+    "section": "OECM Land Suitability Mesh Layer",
+    "text": "OECM Land Suitability Mesh Layer\nEach hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\nmain_map"
+  },
+  {
+    "objectID": "backup_content.html#code-snippets",
+    "href": "backup_content.html#code-snippets",
+    "title": "Content & Deliverables",
+    "section": "Code Snippets",
+    "text": "Code Snippets\nSample code snippet. Notice that you can provide a toggle to switch between coding languages - this is referred to as a ‘tabset’ in quarto. It is good practice to try and convert your R code to python, and vice-versa to demonstrate coding proficiency. For example, let’s showcase a function for calculating NDVI in R and Python.\n\nRPython\n\n\ncalc_ndvi &lt;- function(nir, red){ ndvi &lt;- (nir-red)/(nir+red) return(ndvi) }\n\n\ndef calc_ndvi(nir, red): \n  ndvi = (nir.astype(float)-red.astype(float))/(nir.astype(float)+red.astype(float))\n  return(ndvi)"
+  },
+  {
+    "objectID": "backup_content.html#external-links",
+    "href": "backup_content.html#external-links",
+    "title": "Content & Deliverables",
+    "section": "External links",
+    "text": "External links\nWe can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available here in case you’re interested.\n(To use the GEE tool, navigate to any city you’d like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)"
   }
 ]
