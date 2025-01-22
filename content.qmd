@@ -6,26 +6,46 @@ editor: visual
 
 # Project 1 - Capstone Deliverables
 
-This is a sample page where you can archive project deliverables. Every header you use will correspond to a tab in the legend - shown on the right-hand side of your screen ("On this page").
+This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a "mesh sensitivity layer" that integrates critical habitat data, forest age (\>200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.
 
-If you've produced any GIS layers for your 599 project, this may be a good place to share them as interactive maps through leaflet. Alternatively, you can upload high-res figures showing correlations, box-plots, etc. from your report here, and provide a brief overview of key project results. If you have written some useful functions, you may also want to share those here to demonstrate proficiency in particular coding languages or synergies between notable coding packages.
+Spatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.
 
 ## Leaflet
 
 Sample leaflet - for detailed leaflet instructions, visit the FCOR 599 workshop archive page [here](https://ubc-mgem-fcor599.github.io/FCOR-599-Workshops/Interactive_Maps/leaflet.html).
 
 ```{r leaflet, include = FALSE}
-library(dplyr); library(leaflet)
+library(dplyr); library(leaflet); library(sf)
 
-m <- leaflet() %>%
-  addProviderTiles("Esri.WorldImagery") %>%
-  addScaleBar(position = c("bottomleft")) %>%
-  setView(-123.1207, 49.2827, zoom = 11)
+# Load the spatial data
+oecm_data <- st_read("~/FCOR 599/ArcGIS/FCOR599_HoweSound_OECM/HoweSound_Weig_FeaturesToJSO.geojson")
+
+# Check CRS and reproject to WGS84 if necessary
+if (st_crs(oecm_data)$epsg != 4326) {
+  oecm_data <- st_transform(oecm_data, crs = 4326)
+}
+
+# Validate the geometry
+oecm_data <- st_make_valid(oecm_data)
+
+# Define a color palette based on a column (e.g., "CategoryColumn")
+pal <- colorNumeric(palette = "YlGnBu", domain = oecm_data$total_weig)
+
+# Create the map
+main_map <- leaflet(oecm_data) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    color = ~pal(oecm_data$total_weig), # Color based on column
+    weight = 1,
+    fillOpacity = 0.7,
+    label = ~paste0("Category: ", oecm_data$total_weig) # Tooltip
+  ) %>%
+  setView(lng = -123.155, lat = 49.7016, zoom = 12) # Center on Squamish
 
 ```
 
-```{r map, echo=FALSE}
-m
+```{r}
+main_map
 ```
 
 ## Code Snippets
@@ -50,7 +70,7 @@ def calc_ndvi(nir, red):
 
 ## External links
 
-You can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available [here](https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool) in case you're interested.
+We can also provide a frame linking to external websites. For example, here is a link to a Google Earth Engine application I developed. The full-screen GEE application is available [here](https://ee-melserramon.projects.earthengine.app/view/thermal-analysis-tool) in case you're interested.
 
 (To use the GEE tool, navigate to any city you'd like, hit apply filters, and click anywhere on the map to retrieve a time-series of Landsat surface temperature observations for that point. Areas where the maximum temp exceeded 35 degrees Celsius in your date-range are highlighted in red.)
 
