@@ -1,8 +1,9 @@
 ---
-title: "Content & Deliverables"
+title: "About Me"
 format: html
 editor: visual
 ---
+
 
 
 
@@ -15,6 +16,7 @@ Spatial analysis, guided by a decision support tool, evaluates parcels based on 
 ## OECM Land Suitability Mesh Layer
 
 Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.
+
 
 
 
@@ -54,10 +56,8 @@ main_map
 
 
 
+
 ## BC Fabric Parcel Selection
 
 Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change.
-
-
-
 

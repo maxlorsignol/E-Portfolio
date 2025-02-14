@@ -3,17 +3,27 @@ project:
   output-dir: C:/Users/lorsigno.stu/OneDrive - UBC/Desktop/Documents/GitHub/E-Portfolio
 
 website:
-  title: "Your E-Portfolio"
+  title: "Max's E-Portfolio"
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - href: resume.qmd
-        text: Resume
-      - href: publications.qmd
-        text: Publications
-      - href: content.qmd
-        text: Content & Deliverables
+      - text: Portfolio
+        menu:
+          - href: portfolio.qmd
+            text: Overview
+          - href: portfolio_remote_sensing.qmd
+            text: Remote Sensing
+          - href: portfolio_landscape_ecology.qmd
+            text: Landscape Ecology
+          - href: portfolio_geospatial.qmd
+            text: Geospatial Analysis
+          - href: portfolio_personal.qmd
+            text: Personal Projects
+      - href: cv.qmd
+        text: CV
+      - href: contact.qmd
+        text: Contact
 
 format:
   html:
