@@ -10,8 +10,6 @@ website:
         text: Home
       - text: Portfolio
         menu:
-          - href: portfolio.qmd
-            text: Overview
           - href: portfolio_remote_sensing.qmd
             text: Remote Sensing
           - href: portfolio_landscape_ecology.qmd

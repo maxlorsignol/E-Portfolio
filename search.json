@@ -159,5 +159,26 @@
     "title": "portfolio_geospatial",
     "section": "",
     "text": "Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html",
+    "href": "portfolio_remote_sensing.html",
+    "title": "portfolio_remote_sensing",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#quarto",
+    "href": "portfolio_remote_sensing.html#quarto",
+    "title": "portfolio_remote_sensing",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#running-code",
+    "href": "portfolio_remote_sensing.html#running-code",
+    "title": "portfolio_remote_sensing",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
   }
 ]
