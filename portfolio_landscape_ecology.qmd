@@ -1,5 +1,5 @@
 ---
-title: "portfolio_landscape_ecology"
+title: "Landscape Ecology"
 format: html
 editor: visual
 ---

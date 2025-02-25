@@ -2,9 +2,9 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Max Lorsignol E-Portfolio",
+    "title": "Max Lorsignol",
     "section": "",
-    "text": "Hi, my name is Max Lorsignol.\nI am currently pursuing a Master’s degree in Geomatics for Environmental Management at UBC. What is geomatics, you ask? In a nutshell, geomatics is the science and technology of collecting, analyzing, managing, and visualizing spatial data. Ever since I was a child, I’ve been fascinated by the maps my father used for his mountaineering adventures. Today, I’m leveraging that lifelong love for mapping and applying it to modern tools and standards.\nWhen I’m not crafting digital maps or spatial analyses, you’ll find me outdoors, navigating the rugged mountains of the west coast with the same passion for exploration. My goal is to combine the skills I’ve developed through my education and personal experiences to address pressing issues related to environmental management, natural resources, climate change, and land use management. I hope to make a meaningful difference in creating sustainable solutions for the challenges our world faces today."
+    "text": "Hi, my name is Max Lorsignol.\nI am currently pursuing a Master’s degree in Geomatics for Environmental Management at UBC. What is geomatics, you ask? In a nutshell, geomatics is the science and technology of collecting, analyzing, managing, and visualizing spatial data. Ever since I was a child, I’ve been fascinated by the maps my father used for his mountaineering adventures. Today, I’m leveraging that lifelong love for mapping and applying it with modern tools and standards to be a part of the conservation and environmental efforts of the 21st century.\nWhen I’m not crafting digital maps or spatial analyses, you’ll find me outdoors, navigating the rugged mountains of the west coast with the same passion for exploration. My goal is to combine the skills I’ve developed through my education and personal experiences to address pressing issues related to environmental management, natural resources, climate change, and land use management. I hope to make a meaningful difference in creating sustainable solutions for the challenges our world faces today.\n\n\n\nGIF of a forest plot with Individual Trees Segmented using li2012, colorized by TreeID"
   },
   {
     "objectID": "resume.html",
@@ -114,21 +114,21 @@
   {
     "objectID": "portfolio_personal.html",
     "href": "portfolio_personal.html",
-    "title": "portfolio_personal",
+    "title": "Personal Projects",
     "section": "",
     "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
   },
   {
     "objectID": "portfolio_personal.html#quarto",
     "href": "portfolio_personal.html#quarto",
-    "title": "portfolio_personal",
+    "title": "Personal Projects",
     "section": "",
     "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
   },
   {
     "objectID": "portfolio_personal.html#running-code",
     "href": "portfolio_personal.html#running-code",
-    "title": "portfolio_personal",
+    "title": "Personal Projects",
     "section": "Running Code",
     "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
   },
@@ -142,43 +142,176 @@
   {
     "objectID": "portfolio_geospatial.html",
     "href": "portfolio_geospatial.html",
-    "title": "portfolio_geospatial",
+    "title": "Geospatial Analysis",
     "section": "",
-    "text": "This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a “mesh sensitivity layer” that integrates critical habitat data, forest age (&gt;200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.\nSpatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.\n\n\nEach hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\nmain_map\n\n\n\n\n\n\n\n\nUsing the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
+    "text": "This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a “mesh sensitivity layer” that integrates critical habitat data, forest age (/&gt;200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.\nSpatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.\n\n\nEach hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\n\nReading layer `HoweSound_Weig_FeaturesToJSO' from data source \n  `C:\\Users\\lorsigno.stu\\Documents\\GitHub\\E-Portfolio\\data\\HoweSound_Weig_FeaturesToJSO.gpkg' \n  using driver `GPKG'\nSimple feature collection with 171789 features and 10 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: -13760020 ymin: 6331006 xmax: -13670460 ymax: 6455748\nProjected CRS: WGS 84 / Pseudo-Mercator\n\n\n\n\n\n\n\n\n\n\n\nUsing the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
   },
   {
     "objectID": "portfolio_geospatial.html#oecm-land-suitability-mesh-layer",
     "href": "portfolio_geospatial.html#oecm-land-suitability-mesh-layer",
-    "title": "portfolio_geospatial",
+    "title": "Geospatial Analysis",
     "section": "",
-    "text": "Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\nmain_map"
+    "text": "Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.\n\n\nReading layer `HoweSound_Weig_FeaturesToJSO' from data source \n  `C:\\Users\\lorsigno.stu\\Documents\\GitHub\\E-Portfolio\\data\\HoweSound_Weig_FeaturesToJSO.gpkg' \n  using driver `GPKG'\nSimple feature collection with 171789 features and 10 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: -13760020 ymin: 6331006 xmax: -13670460 ymax: 6455748\nProjected CRS: WGS 84 / Pseudo-Mercator"
   },
   {
     "objectID": "portfolio_geospatial.html#bc-fabric-parcel-selection",
     "href": "portfolio_geospatial.html#bc-fabric-parcel-selection",
-    "title": "portfolio_geospatial",
+    "title": "Geospatial Analysis",
     "section": "",
     "text": "Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change."
   },
   {
     "objectID": "portfolio_remote_sensing.html",
     "href": "portfolio_remote_sensing.html",
-    "title": "portfolio_remote_sensing",
+    "title": "Remote Sensing",
     "section": "",
-    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+    "text": "During my free time and from my Masters of Geomatics for Environmental Management (MGEM) at UBC, I have learned a range of remote sensing techniques and skills.\nBelow are some of those projects, current and past."
   },
   {
     "objectID": "portfolio_remote_sensing.html#quarto",
     "href": "portfolio_remote_sensing.html#quarto",
-    "title": "portfolio_remote_sensing",
+    "title": "Remote Sensing",
     "section": "",
     "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
   },
   {
     "objectID": "portfolio_remote_sensing.html#running-code",
     "href": "portfolio_remote_sensing.html#running-code",
-    "title": "portfolio_remote_sensing",
+    "title": "Remote Sensing",
     "section": "Running Code",
     "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "portfolio_landscape_ecology.html",
+    "href": "portfolio_landscape_ecology.html",
+    "title": "Landscape Ecology",
+    "section": "",
+    "text": "This page is currently a work in progress.\n\n\n  layer       crs units   class n_classes OK\n1     1 projected     m integer        17  ✔\n\n\n\n\n# A tibble: 10 × 4\n      ID Class                       Color   Description                        \n   &lt;dbl&gt; &lt;chr&gt;                       &lt;chr&gt;   &lt;chr&gt;                              \n 1    11 Open Water                  #5475A8 Areas of open water, generally wit…\n 2    21 Developed, Open Space       #E8D1D1 Areas with a mixture of some const…\n 3    22 Developed, Low Intensity    #E29E8C Areas with a mixture of constructe…\n 4    23 Developed, Medium Intensity #ff0000 Areas with a mixture of constructe…\n 5    41 Deciduous Forest            #85C77E Areas dominated by trees generally…\n 6    42 Evergreen Forest            #38814E Areas dominated by trees generally…\n 7    43 Mixed Forest                #D4E7B0 Areas dominated by trees generally…\n 8    52 Shrub/Scrub                 #DCCA8F Areas dominated by shrubs; less th…\n 9    82 Cultivated Crops            #CA9146 Areas used for the production of a…\n10    90 Woody Wetlands              #C8E6F8 Areas where forest or shrubland ve…"
+  },
+  {
+    "objectID": "portfolio_landscape_ecology.html#quarto",
+    "href": "portfolio_landscape_ecology.html#quarto",
+    "title": "Landscape Ecology",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "portfolio_landscape_ecology.html#running-code",
+    "href": "portfolio_landscape_ecology.html#running-code",
+    "title": "Landscape Ecology",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "contact.html",
+    "href": "contact.html",
+    "title": "Contact",
+    "section": "",
+    "text": "I am always eager to connect! If you have any questions, opportunities or just want to say hi, feel free to reach out through any of the channels below:\nemail: maxlorsignol@gmail.com\nphone: 780-340-6128\nLinkedIn: Max Lorsignol\nGitHub: maxlorsignol"
+  },
+  {
+    "objectID": "contact.html#quarto",
+    "href": "contact.html#quarto",
+    "title": "Contact",
+    "section": "",
+    "text": "Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see https://quarto.org."
+  },
+  {
+    "objectID": "contact.html#running-code",
+    "href": "contact.html#running-code",
+    "title": "Contact",
+    "section": "Running Code",
+    "text": "Running Code\nWhen you click the Render button a document will be generated that includes both content and the output of embedded code. You can embed code like this:\n\n1 + 1\n\n[1] 2\n\n\nYou can add options to executable code like this\n\n\n[1] 4\n\n\nThe echo: false option disables the printing of code (only output is displayed)."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#examples-of-remote-sensing-experience",
+    "href": "portfolio_remote_sensing.html#examples-of-remote-sensing-experience",
+    "title": "Remote Sensing",
+    "section": "",
+    "text": "Below are some projects in remote sensing techniques that I have become familiar with during my Masters program at UBC."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#land-classification",
+    "href": "portfolio_remote_sensing.html#land-classification",
+    "title": "Remote Sensing",
+    "section": "Land Classification",
+    "text": "Land Classification\nThe Remote Sensing course in MGEM taught me how to produce landscape classifications using a variety of supervised and unsupervised classification processes. Fascinated by different classification processes and the maps it produced, I extended this skill to produce a number of classified maps of various landscapes where Landsat and Copernicus satellite data was available. Generally my focus was with the Howe Sound Biosphere as it was part of my capstone project at UBC and is where I spend my time hiking, skiing and climbing. Below are some of the results of recent pixel classifications.\nBelow is a slide-by-side comparison of two different classification processes of the Howe Sound. The left side is classified under a supervised process using hand-delineated polygons, 20/80 training to validation, with custom R code (a lot of work). The right shows a classification using the ArcGIS Pro deeplearning land cover classification (almost instantaneous).\n\n\n# A tibble: 0 × 4\n# ℹ 4 variables: ID &lt;dbl&gt;, Class &lt;chr&gt;, Color &lt;chr&gt;, Description &lt;chr&gt;\n\n\n\n\n\n\n \nThe idea here is to visualize the difference and address the accuracies between the two classification models. How do you think they compare?"
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#time-series-analysis",
+    "href": "portfolio_remote_sensing.html#time-series-analysis",
+    "title": "Remote Sensing",
+    "section": "Time Series Analysis",
+    "text": "Time Series Analysis\nIn this lab, I analyzed time series data in R by first working with MODIS NDVI data. I applied the BFAST algorithm to detect abrupt changes in vegetation—like logging events—that cause rapid declines in NDVI values. I then examined a 33‐year series of land cover maps from Landsat imagery, reclassifying the data into forested and non-forested areas to evaluate trends in forest loss and gain. Throughout the lab, I developed R code for data extraction, time series creation, and visualization, showcasing my practical skills in spatial and temporal analysis with packages such as terra, sf, and bfast."
+  },
+  {
+    "objectID": "portfolio_remote_sensing.html#burn-severity-analysis",
+    "href": "portfolio_remote_sensing.html#burn-severity-analysis",
+    "title": "Remote Sensing",
+    "section": "Burn Severity Analysis",
+    "text": "Burn Severity Analysis"
+  },
+  {
+    "objectID": "cv.html",
+    "href": "cv.html",
+    "title": "CV",
+    "section": "",
+    "text": "B.Sc Earth and Environmental Science UBC Okanagan (2024-2025)\nMasters in Geomatics for Environmental Management UBC Vancouver (2016-2019)"
+  },
+  {
+    "objectID": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc-2021-2024",
+    "href": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc-2021-2024",
+    "title": "CV",
+    "section": "Lead Field Technician at AquaCoustic Remote Technologies Inc 2021-2024",
+    "text": "Lead Field Technician at AquaCoustic Remote Technologies Inc 2021-2024\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software"
+  },
+  {
+    "objectID": "cv.html#visitors-service-attendant-for-banff-national-park",
+    "href": "cv.html#visitors-service-attendant-for-banff-national-park",
+    "title": "CV",
+    "section": "Visitors Service Attendant for Banff National Park",
+    "text": "Visitors Service Attendant for Banff National Park\n(Summers 2018 and 2019)\n\nPublic outreach: Providing orientation, information and suggestions to visitors in Banff National Park\nEnforcing Park closures, restrictions and regulations with compliance and ticketing\nEmployee uniform and accessories inventory, distribution and organizing\nUpdating Dispatch and Resource Conservation on wildlife encounters, fires and other public safety concerns\nCustomer service - Handling cash and credit POS transactions in any weather situation quickly and effectively"
+  },
+  {
+    "objectID": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc-2020-2024",
+    "href": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc-2020-2024",
+    "title": "CV",
+    "section": "Lead Field Technician at AquaCoustic Remote Technologies Inc (2020-2024)",
+    "text": "Lead Field Technician at AquaCoustic Remote Technologies Inc (2020-2024)\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software"
+  },
+  {
+    "objectID": "cv.html#co-founder-canopy-campers-van-rentals-2023---present",
+    "href": "cv.html#co-founder-canopy-campers-van-rentals-2023---present",
+    "title": "CV",
+    "section": "Co-Founder Canopy Campers Van Rentals (2023 - Present)",
+    "text": "Co-Founder Canopy Campers Van Rentals (2023 - Present)\n\nModelling van interiors using SketchUp for fully off-grid 4-person camper vans\nCustom woodworking and metal working for modular van camping set-ups\nClient interaction & conlfict resolution online and in person, cash and POI transactions\nVehicle maintenance and repairs, regular cleaning, organizing and restocking"
+  },
+  {
+    "objectID": "cv.html#visitors-service-attendant-for-banff-national-park-summers-2018-and-2019",
+    "href": "cv.html#visitors-service-attendant-for-banff-national-park-summers-2018-and-2019",
+    "title": "CV",
+    "section": "Visitors Service Attendant for Banff National Park (Summers 2018 and 2019)",
+    "text": "Visitors Service Attendant for Banff National Park (Summers 2018 and 2019)\n\nPublic outreach: Providing orientation, information and suggestions to visitors in Banff National Park\nEnforcing Park closures, restrictions and regulations with compliance and ticketing\nEmployee uniform and accessories inventory, distribution and organizing\nUpdating Dispatch and Resource Conservation on wildlife encounters, fires and other public safety concerns\nCustomer service - Handling cash and credit POS transactions in any weather situation quickly and effectively"
+  },
+  {
+    "objectID": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc",
+    "href": "cv.html#lead-field-technician-at-aquacoustic-remote-technologies-inc",
+    "title": "CV",
+    "section": "Lead Field Technician at AquaCoustic Remote Technologies Inc",
+    "text": "Lead Field Technician at AquaCoustic Remote Technologies Inc\n(2020-2024)\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software"
+  },
+  {
+    "objectID": "cv.html#co-founder-canopy-campers-van-rentals",
+    "href": "cv.html#co-founder-canopy-campers-van-rentals",
+    "title": "CV",
+    "section": "Co-Founder Canopy Campers Van Rentals",
+    "text": "Co-Founder Canopy Campers Van Rentals\n(2023 - Present)\n\nModelling van interiors using SketchUp for fully off-grid 4-person camper vans\nCustom woodworking and metal working for modular van camping set-ups\nClient interaction & conlfict resolution online and in person, cash and POI transactions\nVehicle maintenance and repairs, regular cleaning, organizing and restocking"
+  },
+  {
+    "objectID": "portfolio_landscape_ecology.html#marbled-murrelet-landscape-connectivity-using-grainsofconnectivity",
+    "href": "portfolio_landscape_ecology.html#marbled-murrelet-landscape-connectivity-using-grainsofconnectivity",
+    "title": "Landscape Ecology",
+    "section": "",
+    "text": "This page is currently a work in progress.\n\n\n  layer       crs units   class n_classes OK\n1     1 projected     m integer        17  ✔\n\n\n\n\n# A tibble: 10 × 4\n      ID Class                       Color   Description                        \n   &lt;dbl&gt; &lt;chr&gt;                       &lt;chr&gt;   &lt;chr&gt;                              \n 1    11 Open Water                  #5475A8 Areas of open water, generally wit…\n 2    21 Developed, Open Space       #E8D1D1 Areas with a mixture of some const…\n 3    22 Developed, Low Intensity    #E29E8C Areas with a mixture of constructe…\n 4    23 Developed, Medium Intensity #ff0000 Areas with a mixture of constructe…\n 5    41 Deciduous Forest            #85C77E Areas dominated by trees generally…\n 6    42 Evergreen Forest            #38814E Areas dominated by trees generally…\n 7    43 Mixed Forest                #D4E7B0 Areas dominated by trees generally…\n 8    52 Shrub/Scrub                 #DCCA8F Areas dominated by shrubs; less th…\n 9    82 Cultivated Crops            #CA9146 Areas used for the production of a…\n10    90 Woody Wetlands              #C8E6F8 Areas where forest or shrubland ve…"
   }
 ]
