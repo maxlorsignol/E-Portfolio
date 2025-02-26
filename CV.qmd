@@ -13,6 +13,7 @@ editor: visual
 # Professional Experience
 
 ## Lead Field Technician at AquaCoustic Remote Technologies Inc
+
 (2020-2024)
 
 -   Setting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data
@@ -30,6 +31,7 @@ editor: visual
 -   Processing sonar, laser and video data using custom and sourced software\
 
 ## Co-Founder Canopy Campers Van Rentals
+
 (2023 - Present)
 
 -   Modelling van interiors using SketchUp for fully off-grid 4-person camper vans
@@ -39,8 +41,9 @@ editor: visual
 -   Client interaction & conlfict resolution online and in person, cash and POI transactions
 
 -   Vehicle maintenance and repairs, regular cleaning, organizing and restocking
- 
+
 ## Visitors Service Attendant for Banff National Park
+
 (Summers 2018 and 2019)
 
 -   Public outreach: Providing orientation, information and suggestions to visitors in Banff National Park

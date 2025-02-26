@@ -12,66 +12,75 @@ Below are some of those projects, current and past.
 
 The Remote Sensing course in MGEM taught me how to produce landscape classifications using a variety of supervised and unsupervised classification processes. Fascinated by different classification processes and the maps it produced, I extended this skill to produce a number of classified maps of various landscapes where Landsat and Copernicus satellite data was available. Generally my focus was with the Howe Sound Biosphere as it was part of my capstone project at UBC and is where I spend my time hiking, skiing and climbing. Below are some of the results of recent pixel classifications.
 
-Supervised classification using RStoolbox package in R using LANDSAT 7 imagery of Howe Sound
+Below is a slide-by-side comparison of two different classification processes of the Howe Sound. The left side is classified under a supervised process using hand-delineated polygons, 20/80 training to validation, with custom R code (a lot of work). The right shows a classification using the ArcGIS Pro deeplearning land cover classification (almost instantaneous).
 
 ```{r leaflet, echo=FALSE, warning=FALSE, message=FALSE}
-
 library(leaflet)
+library(leaflet.extras2)
 library(terra)
 library(raster)
+library(tmap)
+library(tmaptools)
+library(FedData)
 
-LC_RStoolbox <- raster("C:/Users/lorsigno.stu/OneDrive - UBC/Desktop/Documents/Projects/Classification/HoweSound Classification/classified_map.tif")
-LC_ArcGIS_RandomTrees <- raster("C:/Users/lorsigno.stu/OneDrive - UBC/Desktop/Documents/ArcGIS/Projects/MyProject/rf_hs_classification_1.tif")
-LC_ArcGIS_DeepLearning <- raster("C:/Users/lorsigno.stu/OneDrive - UBC/Desktop/Documents/Projects/Classification/Deep Learning/HoweSound_DL_classification/hs_classification_deeplearning_test/hs_composite_DL_ClassifyP.tif")
+LC_ArcGIS_DeepLearning <- rast("data/hs_composite_DL_ClassifyP.tif")
+Random_Forests <- rast("data/randomforests_howesound_classification.tif")
 
-HS_class_map <- leaflet(width = 600, height = 600)%>%
+something <- leaflet(width = 600, height = 600)%>%
   
-  # lets use some base imagery
-  addProviderTiles("Esri.WorldImagery") %>%
+  #set up the two map panes
+  addMapPane("right", zIndex = 1) %>%
+  addMapPane("left",  zIndex = 2) %>%
   
-  # add RStoolbox from R classification
-  addRasterImage(LC_RStoolbox, 
-                 # you can increase the allowable size of the rast here
+  #add the ESRI basemap to both map panes
+  addProviderTiles("CartoDB.Positron", group = "base", layerId = "baseid1", options = pathOptions(pane = "right")) %>%
+  addProviderTiles("CartoDB.Positron", group = "base", layerId = "baseid2", options = pathOptions(pane = "left")) %>%
+  
+  #now lets add our Random_Forests
+  addRasterImage(Random_Forests, 
+                 #you can increase the allowable size of the rast here
                  maxBytes = 10 * 1024 *1024,
-                 # provide a name for the layer
-                 group = "LC_RStoolbox") %>%
+                 #provide a name for the layer
+                 group = "Random_Forests",
+                 #assign to a pane
+                 options = leafletOptions(pane = "left")) %>%
   
-  # add the ArcGIS Random Trees Wizard Classification
-  addRasterImage(LC_ArcGIS_RandomTrees, 
-                 # you can increase the allowable size of the rast here
-                 maxBytes = 10 * 1024 *1024,
-                 # provide a name for the layer
-                 group = "LC_ArcGIS_RandomTrees") %>%
-  
-  # add the ArcGIS Deep Learning Classification
+  #now lets add our LC_ArcGIS_DeepLearning
   addRasterImage(LC_ArcGIS_DeepLearning, 
                  #you can increase the allowable size of the rast here
                  maxBytes = 10 * 1024 *1024,
                  #provide a name for the layer
-                 group = "LC_ArcGIS_DeepLearning") %>%
-
+                 group = "LC_ArcGIS_DeepLearning",
+                 #assign to a pane
+                 options = leafletOptions(pane = "right")) %>%
   
   #allow for layers to be toggles on/off by adding them to the layers control
-  addLayersControl(baseGroups = c("LC-RStoolbox","LC-ArcGIS_RandomTrees", "LC-ArcGIS_DeepLearning")) %>%
+  addLayersControl(overlayGroups = c("Random_Forests", "LC_ArcGIS_DeepLearning")) %>%
   
-  #add a legend
-  #addRasterLegend(LC_RStoolbox, opacity = 1)%>%
+  #add slider control
+  addSidebyside(layerId = "sidecontrols",
+                rightId = "baseid1",
+                leftId  = "baseid2",
+                options = list(padding = 0)) %>%
   
   #add scale bar
-  addScaleBar(position = c("bottomleft"))
+  addScaleBar(position = c("bottomleft")) %>% 
 
+  leaflet::addControl(
+    html = "<div style='background: rgba(255,255,255,0.8); padding: 5px;'>
+              <img src='images/randomforests_classification_legend.png' style='width:150px;'>
+            </div>",
+    position = "bottomleft"
+  ) %>%
+    
+  leaflet::addControl(
+    html = "<div style='background: rgba(255,255,255,0.8); padding: 5px;'>
+              <img src='images/deep_learning_classification_legend.png' style='width:150px;'>
+            </div>",
+    position = "bottomright"
+  )
+
+something
 ```
 
-```{r}
-HS_class_map
-```
-
-Unsupervised classification using ArcGIS Pro
-
--   here i just want to insert either images from the land classification from ArcGIS or have interactive mapping
-
-## Time Series Analysis
-
-In this lab, I analyzed time series data in R by first working with MODIS NDVI data. I applied the BFAST algorithm to detect abrupt changes in vegetation—like logging events—that cause rapid declines in NDVI values. I then examined a 33‐year series of land cover maps from Landsat imagery, reclassifying the data into forested and non-forested areas to evaluate trends in forest loss and gain. Throughout the lab, I developed R code for data extraction, time series creation, and visualization, showcasing my practical skills in spatial and temporal analysis with packages such as terra, sf, and bfast.
-
-## Burn Severity Analysis
+The idea here is to visualize the difference and address the accuracies between the two classification models. How do you think they compare?
