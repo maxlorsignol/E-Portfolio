@@ -1,6 +1,6 @@
 project:
   type: website
-  output-dir: C:\Users\lorsigno.stu\OneDrive - UBC\Desktop\Documents\GitHub\E-Portfolio
+  output-dir: c:\Users\lorsigno.stu\OneDrive - UBC\Desktop\Documents\GitHub\E-Portfolio
 
 website:
   title: "Max's E-Portfolio"
