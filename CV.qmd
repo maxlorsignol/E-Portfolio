@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-# Education
+# Max's Education
 
 -   B.Sc Earth and Environmental Science UBC Okanagan (2024-2025)
 
