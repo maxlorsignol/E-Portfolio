@@ -14,7 +14,7 @@ website:
             text: Remote Sensing
           - href: portfolio_geospatial.qmd
             text: Geospatial Analysis
-      - href: cv.qmd
+      - href: cv2.qmd
         text: CV
       - href: contact.qmd
         text: Contact

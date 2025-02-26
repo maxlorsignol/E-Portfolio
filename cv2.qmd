@@ -1,7 +1,5 @@
 ---
 title: "CV"
-format: html
-editor: visual
 ---
 
 # Max's Education

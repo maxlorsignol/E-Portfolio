@@ -327,5 +327,33 @@
     "title": "Geospatial Analysis",
     "section": "Python",
     "text": "Python\n\n\nPython Code Snippet\nimport rasterio\nimport numpy as np\nimport geopandas as gpd\nimport matplotlib.pyplot as plt\nfrom rasterio.plot import show\nfrom rasterio.warp import reproject, Resampling\n\n# Define input raster files\nraster_files = {\n    \"biological_sensitivity\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/critical_habitat_raster.tif\",\n    \"watershed\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/watershed_raster.tif\",\n    \"streams\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/streams_50m_buffer.tif\",\n    \"wetlands\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/wetland_raster.tif\",\n    \"slope\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/slope_greaterthan30_raster.tif\",\n    \"forest_age\": r\"C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/Layers/forest_age_vri.tif\"\n}\n\n# Define weights\nweights = {\n    \"biological_sensitivity\": 0.25,\n    \"watershed\": 0.15,\n    \"streams\": 0.2,\n    \"wetlands\": 0.15,\n    \"slope\": 0.1,\n    \"forest_age\": 0.15\n}\n\n# Select a reference raster (first raster in the dictionary)\nreference_raster = list(raster_files.values())[0]\n\n# Read reference raster to get target shape, transform, and CRS\nwith rasterio.open(reference_raster) as ref_src:\n    ref_transform = ref_src.transform\n    ref_crs = ref_src.crs\n    ref_width = ref_src.width\n    ref_height = ref_src.height\n    ref_dtype = ref_src.dtypes[0]\n\n# Function to resample rasters to match the reference raster dimensions\ndef resample_raster(src_path):\n    with rasterio.open(src_path) as src:\n        data = src.read(1).astype(float)\n        data[data == src.nodata] = np.nan  # Handle NoData values\n        \n        # Create an empty array for resampled data\n        resampled_data = np.empty((ref_height, ref_width), dtype=ref_dtype)\n        \n        # Reproject and resample\n        reproject(\n            source=data,\n            destination=resampled_data,\n            src_transform=src.transform,\n            src_crs=src.crs,\n            dst_transform=ref_transform,\n            dst_crs=ref_crs,\n            resampling=Resampling.bilinear\n        )\n        \n        return resampled_data\n\n# Read, resample, and apply weights\nweighted_sum = np.zeros((ref_height, ref_width), dtype=np.float32)\n\nfor layer, path in raster_files.items():\n    resampled_raster = resample_raster(path)\n    weighted_sum += weights[layer] * resampled_raster  # Apply weighted sum\n\n# Normalize weighted sum\nweighted_sum = (weighted_sum - np.nanmin(weighted_sum)) / (np.nanmax(weighted_sum) - np.nanmin(weighted_sum))\n\n# Load parcel data\nparcels = gpd.read_file(r\"c:/Users/lorsigno.stu/Documents/Projects/OECM_WebApp/Layers/HoweSound_Parcel_all.shp\")\n\n# Select top X% parcels based on suitability\nthreshold = np.nanpercentile(weighted_sum, 90)\nselected_parcels = parcels.copy()\nselected_parcels[\"suitability\"] = selected_parcels.geometry.centroid.apply(\n    lambda pt: weighted_sum[int(pt.y), int(pt.x)]\n    if 0 &lt;= int(pt.y) &lt; ref_height and 0 &lt;= int(pt.x) &lt; ref_width and weighted_sum[int(pt.y), int(pt.x)] &gt;= threshold\n    else np.nan\n)\nselected_parcels = selected_parcels.dropna()\n\n# Plot results\nfig, ax = plt.subplots(figsize=(10, 8))\n\n# Plot weighted suitability raster\nshow(weighted_sum, transform=ref_transform, cmap=\"viridis\", ax=ax, title=\"Howe Sound Parcel Map\")\n\n# Plot parcels\nparcels.boundary.plot(ax=ax, edgecolor=\"gray\", linewidth=0.5)\n\n# Plot selected parcels\nselected_parcels.boundary.plot(ax=ax, edgecolor=\"red\", linewidth=1.5, label=\"Selected Parcels\")\n\nplt.legend()\nplt.show()\n\n\n\n\n\nHowe Sound Biosphere Parcels"
+  },
+  {
+    "objectID": "cv2.html",
+    "href": "cv2.html",
+    "title": "CV",
+    "section": "",
+    "text": "B.Sc Earth and Environmental Science UBC Okanagan (2024-2025)\nMasters in Geomatics for Environmental Management UBC Vancouver (2016-2019)"
+  },
+  {
+    "objectID": "cv2.html#lead-field-technician-at-aquacoustic-remote-technologies-inc",
+    "href": "cv2.html#lead-field-technician-at-aquacoustic-remote-technologies-inc",
+    "title": "CV",
+    "section": "Lead Field Technician at AquaCoustic Remote Technologies Inc",
+    "text": "Lead Field Technician at AquaCoustic Remote Technologies Inc\n(2020-2024)\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software"
+  },
+  {
+    "objectID": "cv2.html#co-founder-canopy-campers-van-rentals",
+    "href": "cv2.html#co-founder-canopy-campers-van-rentals",
+    "title": "CV",
+    "section": "Co-Founder Canopy Campers Van Rentals",
+    "text": "Co-Founder Canopy Campers Van Rentals\n(2023 - Present)\n\nModelling van interiors using SketchUp for fully off-grid 4-person camper vans\nCustom woodworking and metal working for modular van camping set-ups\nClient interaction & conlfict resolution online and in person, cash and POI transactions\nVehicle maintenance and repairs, regular cleaning, organizing and restocking"
+  },
+  {
+    "objectID": "cv2.html#visitors-service-attendant-for-banff-national-park",
+    "href": "cv2.html#visitors-service-attendant-for-banff-national-park",
+    "title": "CV",
+    "section": "Visitors Service Attendant for Banff National Park",
+    "text": "Visitors Service Attendant for Banff National Park\n(Summers 2018 and 2019)\n\nPublic outreach: Providing orientation, information and suggestions to visitors in Banff National Park\nEnforcing Park closures, restrictions and regulations with compliance and ticketing\nEmployee uniform and accessories inventory, distribution and organizing\nUpdating Dispatch and Resource Conservation on wildlife encounters, fires and other public safety concerns\nCustomer service - Handling cash and credit POS transactions in any weather situation quickly and effectively"
   }
 ]
