@@ -83,8 +83,6 @@ ggplot(burned_area_summary, aes(x = FIRE_YEAR, y = total_burned_area, fill = FIR
 
 ```
 
-![Figure 1: Total Area Burned per Year Based on Cause in BC](images/burnseverity_fire_causes.png)
-
 # Step 2 - Pre-processing Landsat 8 Data:
 
 Surface reflectance bands (1–7) are combined into multi-layer rasters, with cloud masking using QA_PIXEL values. Data is cropped to the Prouton Lakes fire perimeter. NDVI (Normalized Difference Vegetation Index) and NBR (Normalized Burn Ratio) are calculated. Visual Output: True color composite images before (July 7, 2015) and after the fire (July 15, 2018).
@@ -161,8 +159,6 @@ plotRGB(post_fire_RGB_cropped, r = 4, g = 3, b = 2, stretch = "lin", main = "Pos
 
 ```
 
-![Pre-fire RGB Image](images/burnseverity_prefire.png)
-![Post-fire RGB Image](images/burnseverity_postfire.png)
 
 # Step 3 - Yearly NDVI and NBR Composites:
 
@@ -273,7 +269,6 @@ ggplot(ndvi_summary, aes(x = Year, y = Average_NDVI)) +
 
 ```
 
-![Plotted Average NDVI over the Year of the Landsape](images/burnseverity_avg_NDVI.png)
 
 # Step 4 - Burn Severity Classification:
 
@@ -318,7 +313,6 @@ plot(prouton_fire_utm, add = TRUE, border = "black", lwd = 2, col = NA)
 # would have been a good place to look for black morels...
 ```
 
-![Post-fire Classified Landscape Based on Fire Severity](images/burnseverity_classified.png)
 
 # Step 5 - Post-Fire Vegetation Recovery:
 
@@ -396,4 +390,3 @@ ggplot(ndvi_all_years, aes(x = severity, y = value, fill = severity)) +
 ```
 
 
-![Distribution of NDVI Values by Burn Severity Class](images/burnseverity_NDVI_distribution.png)
