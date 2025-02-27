@@ -15,7 +15,6 @@ This analysis is valuable for forest management, wildfire risk assessment, and e
 
 #| execute: false
 #| eval: false
-#| echo: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -40,7 +39,6 @@ Identify total fires and area burned in 2017. Extract fire IDs and areas for the
 
 #| execute: false
 #| eval: false
-#| echo: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -285,8 +283,6 @@ dNBR (Delta NBR) is calculated using pre-fire (2015) and post-fire (2018) imager
 
 #| execute: false
 #| eval: false
-#| warning: false
-#| message: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
