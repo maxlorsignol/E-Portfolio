@@ -1,8 +1,10 @@
 ---
 title: "CV"
+format: html
+editor: visual
 ---
 
-# Max's Education
+# Education
 
 -   B.Sc Earth and Environmental Science UBC Okanagan (2024-2025)
 
