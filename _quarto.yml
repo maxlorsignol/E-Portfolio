@@ -14,7 +14,7 @@ website:
             text: Classification
           - href: OECMParcelSelection.qmd
             text: OECM Parcel Selection
-          - href: burnseverity.qmd
+          - href: BurnSeverity.qmd
             text: Time Series Burn Severity Analysis
           - href: lidrforestmodel.qmd
             text: Estimating Forest Volume from Lidar Metrics
