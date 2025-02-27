@@ -10,10 +10,18 @@ website:
         text: Home
       - text: Portfolio
         menu:
-          - href: portfolio_remote_sensing.qmd
-            text: Remote Sensing
-          - href: portfolio_geospatial.qmd
-            text: Geospatial Analysis
+          - href: classification.qmd
+            text: Classification
+          - href: OECMParcelSelection.qmd
+            text: OECM Parcel Selection
+          - href: burnseverity.qmd
+            text: Time Series Burn Severity Analysis
+          - href: lidrforestmodel.qmd
+            text: Estimating Forest Volume from Lidar Metrics
+          - href: lidr3dmodeling.qmd
+            text: Geospatial LiDAR Analysis in R
+          - href: itd.qmd
+            text: Individual Tree Detection Methods in R
       - href: cv2.qmd
         text: CV
       - href: contact.qmd
