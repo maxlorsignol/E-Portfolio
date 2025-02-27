@@ -8,13 +8,15 @@ website:
     left:
       - href: index.qmd
         text: Home
-      - text: Geomatics
+      - text: GIS
+        menu:
+          - href: OECMParcelSelection.qmd
+            text: OECM Parcel Selection
+      - text: Remote Sensing
         menu:
           - href: classification.qmd
             text: Classification
-          - href: OECMParcelSelection.qmd
-            text: OECM Parcel Selection
-          - href: burnseverity.qmd
+          - href: burnseverity2.qmd
             text: Time Series Burn Severity Analysis
           - href: lidrforestmodel.qmd
             text: Estimating Forest Volume from Lidar Metrics
