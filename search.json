@@ -565,5 +565,40 @@
     "title": "Individual Tree Detection Methods",
     "section": "ITD using Dalponte Coomes (2016)",
     "text": "ITD using Dalponte Coomes (2016)\nLets use another algorith, created by Dalponte Coomes (2016) this time. Same thing, we are going to focus on the first plot we extracted.\n\n\nShow/Hide Code\n# create chm for plot 1 with given pitfree values\nchm_plot1 &lt;- rasterize_canopy(plot_1, res = 0.5, \n                         algorithm = pitfree(c(0, 10, 20, 30), subcircle = 0.2))\n\n# use the locate_trees to 'locate the trees' using default values\nplot1_lmf &lt;- locate_trees(chm_plot1, lmf(ws = 5, hmin = 2, shape = \"circular\", ws_args = \"z\"))\n\n# plot in 2D the CHM of plot 1 and the located trees using the lmf algorithm\nplot(chm_plot1, main = \"dalponte2016 Tree Detection of Plot 1\")\nplot(plot1_lmf, add = TRUE, col = 'pink')\n\n\n\n\n\n2D representation of the Dalponte Coomes (2016) individual tree detection\n\n\nHmm… Didn’t seem too do too well… Lets take a look at it in 3D to see whats up.\n\n\nShow/Hide Code\n# create chm for plot 1 with given pitfree values\nchm_plot1 &lt;- rasterize_canopy(plot_1, res = 0.5, \n                         algorithm = pitfree(c(0, 10, 20, 30), subcircle = 0.2))\n\n# use the locate_trees to 'locate the trees' using default values\nplot1_lmf &lt;- locate_trees(chm_plot1, lmf(ws = 5, hmin = 2, shape = \"circular\", ws_args = \"z\"))\n\n# segment point cloud using dalponte2016\nplot1_dalp &lt;- segment_trees(plot_1, dalponte2016(chm_plot1, treetops = plot1_lmf))\n\n# Open a 3D rendering window for Li et al.2012\nopen3d()\nplot(plot1_dalp, color = \"treeID\")\nrglwidget_plot1_dalp &lt;- rglwidget()\nsaveWidget(rglwidget_plot1_dalp, file = \"interactive_plot1_dalp.html\", selfcontained = TRUE)\n\n\n\n\n\n\nCan you find out why, in the 2D tree detection plot, that the algorithm detected trees where there seemingly were not any?"
+  },
+  {
+    "objectID": "cv2.html#lead-field-technician-at-aquacoustic-remote-technologies",
+    "href": "cv2.html#lead-field-technician-at-aquacoustic-remote-technologies",
+    "title": "CV",
+    "section": "Lead Field Technician at AquaCoustic Remote Technologies",
+    "text": "Lead Field Technician at AquaCoustic Remote Technologies\n(2020-2024)\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software"
+  },
+  {
+    "objectID": "cv2.html#publications",
+    "href": "cv2.html#publications",
+    "title": "CV",
+    "section": "Publications",
+    "text": "Publications\nReports:\n\nFCOR 599 OECM Land Designation in Howe Sound Biosphere.\n\n\nOther Experiences\nVolunteering:\n\nStanley Park Ecology DIRT (Dedicated Invasive Removal Team)\nAME Roundup\nChuckleBerry Organic Farm"
+  },
+  {
+    "objectID": "cv2.html#skills-and-certificates",
+    "href": "cv2.html#skills-and-certificates",
+    "title": "CV",
+    "section": "",
+    "text": "ArcGIS Pro & QGIS\nArcGIS Model Builder and Experience Builder\nFME (Feature Manipulation Engine) for Workflow Automation\nPostgreSQL for Spatial Database Management\nENVI for Remote Sensing Image Analysis\nCartography and Map Design\n\n\n\n\n\nArcGIS Pro, QGIS, ENVI, FME\nPostgreSQL\nPython, R, SQL\nAdobe Illustrator, Photoshop, SketchUp, Procreate\nMicrosoft Office (Excel, Word, PowerPoint)\n\n\n\n\n\nClass 5 Drivers License\nWorkSafeBC\nWHMIS Certified\nFirst Aid (WFA 40 Hour)\nBoating License\nDrone License"
+  },
+  {
+    "objectID": "cv2.html#education",
+    "href": "cv2.html#education",
+    "title": "CV",
+    "section": "Education",
+    "text": "Education\n - Masters in Geomatics for Environmental Management UBC Vancouver (2024-2025)\n\nB.Sc Earth and Environmental Science UBC Okanagan (2016-2019)"
+  },
+  {
+    "objectID": "cv2.html#professional-experience",
+    "href": "cv2.html#professional-experience",
+    "title": "CV",
+    "section": "Professional Experience",
+    "text": "Professional Experience\n\nLead Field Technician at AquaCoustic Remote Technologies\n(2020-2024)\n\nSetting up, testing and deploying robotic platforms including crawlers and pontoons of different sizes, ROVs, and submersibles to collect video, sonar, laser and additional sensor data\nInspections, cleaning and maintenance of robotic platforms, fiber optic winches, vehicles and other warehouse equipment\nHands-on troubleshooting, assembly and repair of equipment inhouse and in the field\nKeeping accurate daily logs and other detailed inspections sheets and paperwork\nUtility vehicle interior designing, building and maintenance, including office space, electronics and winches\nNightwork and all-weather type field work, working independently, within a team capacity and with other contractors\nProcessing sonar, laser and video data using custom and sourced software\n\n\n\n\nCo-Founder Canopy Campers Van Rentals\n(2023 - Present)\n\nModelling van interiors using SketchUp for fully off-grid 4-person camper vans\nCustom woodworking and metal working for modular van camping set-ups\nClient interaction & conlfict resolution online and in person, cash and POI transactions\nVehicle maintenance and repairs, regular cleaning, organizing and restocking\n\n\n\nVisitors Service Attendant for Banff National Park\n(Summers 2018 and 2019)\n\nPublic outreach: Providing orientation, information and suggestions to visitors in Banff National Park\nEnforcing Park closures, restrictions and regulations with compliance and ticketing\nEmployee uniform and accessories inventory, distribution and organizing\nUpdating Dispatch and Resource Conservation on wildlife encounters, fires and other public safety concerns\nCustomer service - Handling cash and credit POS transactions in any weather situation quickly and effectively\n\n\n\nPublications\nReports:\n\nFCOR 599 OECM Land Designation in Howe Sound Biosphere.\n\n\n\nOther Experiences\nVolunteering:\n\nStanley Park Ecology DIRT (Dedicated Invasive Removal Team)\nAME Roundup\nChuckleBerry Organic Farm"
   }
 ]
