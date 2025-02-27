@@ -34,7 +34,7 @@ editor: visual
 
 ## Education
 
-![ubc_logo](images/UBC_logo.png) 
+![](images/UBC_logo.png) 
 
 -   Masters in Geomatics for Environmental Management UBC Vancouver (2024-2025)
 
