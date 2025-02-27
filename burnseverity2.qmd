@@ -11,22 +11,24 @@ This analysis is valuable for forest management, wildfire risk assessment, and e
 
 # Load in necessary packages
 
-```{r, warning=FALSE}
+```{r, warning=FALSE, message=FALSE}
 
+#| execute: false
+#| eval: false
+#| echo: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
 #Attach packages
-suppressPackageStartupMessages({
-  library(terra)
-  library(sf)
-  library(dplyr)
-  library(ggplot2)
-  library(readr)
-  library(stringr)
-  library(lubridate)
-  library(tidyr)
-})
+
+library(terra)
+library(sf)
+library(dplyr)
+library(ggplot2)
+library(readr)
+library(stringr)
+library(lubridate)
+library(tidyr)
 
 ```
 
@@ -34,13 +36,11 @@ suppressPackageStartupMessages({
 
 Identify total fires and area burned in 2017. Extract fire IDs and areas for the three largest fires in 2017. Compute the area burned by the Prouton Lakes fire (C30870). Visual Output: Bar plot of total area burned per year in BC, colored by fire cause.
 
-```{r, warning=FALSE, message=FALSE}
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
 
-#| execute: true
-#| eval: true
+#| execute: false
+#| eval: false
 #| echo: false
-#| warning: false
-#| message: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -85,17 +85,17 @@ ggplot(burned_area_summary, aes(x = FIRE_YEAR, y = total_burned_area, fill = FIR
 
 ```
 
+![Figure 1: Total Area Burned per Year Based on Cause in BC](images/burnseverity_fire_causes.png)
+
 # Step 2 - Pre-processing Landsat 8 Data:
 
 Surface reflectance bands (1–7) are combined into multi-layer rasters, with cloud masking using QA_PIXEL values. Data is cropped to the Prouton Lakes fire perimeter. NDVI (Normalized Difference Vegetation Index) and NBR (Normalized Burn Ratio) are calculated. Visual Output: True color composite images before (July 7, 2015) and after the fire (July 15, 2018).
 
 
-```{r}
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
 
-#| execute: true
-#| eval: true
-#| warning: false
-#| message: false
+#| execute: false
+#| eval: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -163,17 +163,17 @@ plotRGB(post_fire_RGB_cropped, r = 4, g = 3, b = 2, stretch = "lin", main = "Pos
 
 ```
 
+![Pre-fire RGB Image](images/burnseverity_prefire.png)
+![Post-fire RGB Image](images/burnseverity_postfire.png)
 
 # Step 3 - Yearly NDVI and NBR Composites:
 
 Compute annual average NDVI and NBR for the burned area. Visual Output: Line plot of mean NDVI over time, showing post-fire recovery trends.
 
-```{r}
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
 
-#| execute: true
-#| eval: true
-#| warning: false
-#| message: false
+#| execute: false
+#| eval: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -275,14 +275,16 @@ ggplot(ndvi_summary, aes(x = Year, y = Average_NDVI)) +
 
 ```
 
+![Plotted Average NDVI over the Year of the Landsape](images/burnseverity_avg_NDVI.png)
+
 # Step 4 - Burn Severity Classification:
 
 dNBR (Delta NBR) is calculated using pre-fire (2015) and post-fire (2018) imagery. Burn severity is categorized into unburned, low, medium, and high severity using threshold values. Visual Output: Burn severity map with classification overlay.
 
-```{r}
+```{r, warning=FALSE, warning=FALSE, echo=TRUE}
 
-#| execute: true
-#| eval: true
+#| execute: false
+#| eval: false
 #| warning: false
 #| message: false
 #| code-fold: true
@@ -317,21 +319,19 @@ plot(burn_severity, col = c("darkgreen", "yellow", "orange", "red"),
      main = "Burn Severity of the Prouton Lakes Fire")
 plot(prouton_fire_utm, add = TRUE, border = "black", lwd = 2, col = NA)
 
-
-
 # would have been a good place to look for black morels...
 ```
+
+![Post-fire Classified Landscape Based on Fire Severity](images/burnseverity_classified.png)
 
 # Step 5 - Post-Fire Vegetation Recovery:
 
 Convert burn severity raster into polygons. Extract NDVI values for each burn severity class from 2018–2021. Visual Outputs: - Yearly NDVI maps from 2018 to 2021 (same value range 0–0.5). - Boxplots showing NDVI distribution by burn severity class over time.
 
-```{r}
+```{r, warning=FALSE, message=FALSE, echo=TRUE}
 
-#| execute: true
-#| eval: true
-#| warning: false
-#| message: false
+#| execute: false
+#| eval: false
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -398,3 +398,6 @@ ggplot(ndvi_all_years, aes(x = severity, y = value, fill = severity)) +
 
 
 ```
+
+
+![Distribution of NDVI Values by Burn Severity Class](images/burnseverity_NDVI_distribution.png)
