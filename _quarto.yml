@@ -22,11 +22,17 @@ website:
         menu:
           - href: murrelet.qmd
             text: Murrelet Habitat Connectivity
+      - text: Personal Projects
+        menu:
+          - href: vanlife.qmd
+            text: Off Grid Camper Van Build
+          - href: otherprojects.qmd
+            text: Other Projects
       - href: cv2.qmd
         text: CV
       - href: contact.qmd
         text: Contact
-
+      
 format:
   html:
     theme: flatly
