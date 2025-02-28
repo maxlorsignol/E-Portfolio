@@ -22,6 +22,10 @@ website:
         menu:
           - href: murrelet.qmd
             text: Murrelet Habitat Connectivity
+      - text: Diverse Knowledge Systems
+        menu:
+          - href: cortes.qmd
+            text: This Is Cortes
       - text: Personal Projects
         menu:
           - href: vanlife.qmd
