@@ -18,6 +18,10 @@ website:
             text: Classification
           - href: itd.qmd
             text: Individual Tree Detection Methods in R
+      - text: Landscape Ecology
+        menu:
+          - href: murrelet.qmd
+            text: Murrelet Habitat Connectivity
       - href: cv2.qmd
         text: CV
       - href: contact.qmd
