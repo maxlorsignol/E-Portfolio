@@ -4,8 +4,6 @@ format: html
 editor: visual
 ---
 
-# OECM Land Suitability Mesh Layer
-
 This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a "mesh sensitivity layer" that integrates critical habitat data, forest age (\>200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.
 
 Spatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.
@@ -76,13 +74,13 @@ main_map <- leaflet() %>%
     label = ~paste0("Parcel: ", PARCEL_POL)  # replace 'parcel_id' with the actual field name
   ) %>%
   
-  # Add the Selected Parcels layer (update the label field as needed)
+  # Add the OECM Candidates layer (update the label field as needed)
   addPolygons(
     data = selected_parcels,
     color = "blue",
     weight = 1,
     fillOpacity = 0.5,
-    group = "Selected Parcels",
+    group = "OECM Candidates",
     label = ~paste0("Parcel: ", PARCEL_POL)  # replace 'parcel_id' with the actual field name
     ) %>%
   
@@ -91,10 +89,11 @@ main_map <- leaflet() %>%
   
   # Add a layers control for toggling layers on and off
   addLayersControl(
-    overlayGroups = c("Weighted Layer", "BC Parcel Fabric", "Selected Parcels"),
+    overlayGroups = c("Weighted Layer", "BC Parcel Fabric", "OECM Candidates"),
     options = layersControlOptions(collapsed = FALSE)
   )
 
 main_map
 ```
 
+Please be patient with the interactive map, as the weighted suitability layer is quite large. Feel free to toggle off the layer if this page is running poorly.
