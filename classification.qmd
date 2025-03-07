@@ -29,6 +29,9 @@ Random_Forests <- rast("data/randomforests_howesound_classification.tif")
 
 something <- leaflet(width = 600, height = 600)%>%
   
+  #set initial view
+  setView(lng = -123.185, lat = 49.682, zoom = 12) %>% 
+  
   #set up the two map panes
   addMapPane("right", zIndex = 1) %>%
   addMapPane("left",  zIndex = 2) %>%
