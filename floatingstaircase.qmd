@@ -1,5 +1,5 @@
 ---
-title: "Other Projects"
+title: "Floating Staircase"
 format: html
 editor: visual
 ---

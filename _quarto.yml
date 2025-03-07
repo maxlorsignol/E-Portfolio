@@ -34,8 +34,8 @@ website:
         menu:
           - href: vanlife.qmd
             text: Off Grid Camper Van Build
-          - href: otherprojects.qmd
-            text: Other Projects
+          - href: floatingstaircase.qmd
+            text: Floating Staircase
       - href: cv2.qmd
         text: CV
       - href: contact.qmd
