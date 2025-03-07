@@ -52,6 +52,7 @@ rgb_afrf <- rast("~/GEM 521/Lab 4/L4_Data/Aerial_Photo/AFRF_Aerial_Photo.tif") #
 str(rgb_afrf)         # display the structure of the SpatRaster
 plotRGB(rgb_afrf)     # plot the SpatRaster as an RGB image
 ```
+
 ![Aerial Image of the true color composite for Alex Fraser Research Forest](images/AFRF_Aerial_Photo.jpg)
 
 ## Plot 2D Digital Elevation Model
@@ -159,8 +160,6 @@ data_table <- afrf_plot_table %>%
 
 ```
 
-
-
 ```{r plot1 visual, warning=FALSE, message=FALSE, echo=TRUE, results='hide'}
 #| execute: true
 #| eval: true
@@ -181,14 +180,11 @@ rglwidget_obj_plot1 <- rglwidget()
 saveWidget(rglwidget_obj_plot1, file = "interactive_plot1.html", selfcontained = TRUE)
 ```
 
-
 ::: {html}
 <iframe src="interactive_plot1.html" width="100%" height="600px">
 
 </iframe>
-
 :::
-
 
 ## Develop Statistical Model for AGB Estimation
 
@@ -255,20 +251,3 @@ plot(model_AGB_predictor,
 ```
 
 ![Final AGB Predictions using modelAGB](images/modelAGB_afrf.png)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

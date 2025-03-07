@@ -24,7 +24,7 @@ The first step in this analysis is to rasterize the Sensitive Ecosystem Mapping 
 
 After the rasterization and landscape reclassification of the SEM, OGMA and Marbled Murrelet habitat, a series of ecological analyses will be performed. Specifically, a network analysis utilizing the MPG to create a least-cost path model for the Marbled Murrelet, and with varying threshold values, a grains of connectivity (GoC) analysis. A variety of landscape metrics using the landscapemetrics package in R will be applied to the reclassified ecosystems including PLAND (percentage of landscape), NP (number of patches), CAI_MN (mean of core area index), LPI (largest patch index) and other metrics useful to determine the fragmentation and ecosystem edges.
 
-```{r read, warning=FALSE, message=FALSE, echo=TRUE}
+```{r read, warning=FALSE, message=FALSE, echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 
@@ -51,7 +51,7 @@ vals <- unique(hs_class)
 cover_types <- legend[legend$Class %in% vals[,1], ]
 ```
 
-```{r landscape, warning=FALSE, message=FALSE, echo=TRUE}
+```{r landscape, warning=FALSE, message=FALSE, echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 #| fig-cap: "National Landcover Data for Howe Sound, Based on August 2023 data set."
@@ -68,8 +68,7 @@ landscape
 
 Once we have our classified landscape, we can use the landscape metrics to extract the core areas and patches using specific landscape_metrics functions. Below is the resulting core areas of the Howe Sound landscape.
 
-![Core Areas from the Howe Sound Classification based on the NLCD Cover Types](images/murrelet_LandCover_cores.png)
-Now that we have our core areas, lets compare structural connectivity between barren land, evergreen forests, and low developed classes.
+![Core Areas from the Howe Sound Classification based on the NLCD Cover Types](images/murrelet_LandCover_cores.png) Now that we have our core areas, lets compare structural connectivity between barren land, evergreen forests, and low developed classes.
 
 We'll compare the following metrics at the class-level:
 
@@ -79,8 +78,7 @@ We'll compare the following metrics at the class-level:
 -   NP: Number of patches (Aggregation metric)
 -   PLAND: Percentage of landscape of class (Area and Edge metric)
 
-
-```{r metrics}
+```{r metrics, warning=FALSE, message=FALSE, echo=FALSE}
 #| code-fold: true
 #| code-summary: "Show/Hide Code"
 #| fig-cap: "Values for structural connectivity metrics for the current landscape."
@@ -108,26 +106,8 @@ ggplot(metrics_class, aes(class, value)) +
   labs(x = 'Class', y = 'Value')
 ```
 
-
 ### Expected Results & Significance
 
-This study is expected to show a connection between the preferred nesting habitats of the Marbled Murrelet, where they are located in relation to the mapped ecosystems on Gambier Island, and their proximity to the OGMAs. The analysis will likely reveal that edge forests, old growths, and other mature forested areas on the Island correlate to the birds' nesting habitat, in other words, provide crucial habitat sites for the species. There will likely be a connection between the extent of forested edges and its influence on the nesting habitats as the Murrelet. 
+This study is expected to show a connection between the preferred nesting habitats of the Marbled Murrelet, where they are located in relation to the mapped ecosystems on Gambier Island, and their proximity to the OGMAs. The analysis will likely reveal that edge forests, old growths, and other mature forested areas on the Island correlate to the birds' nesting habitat, in other words, provide crucial habitat sites for the species. There will likely be a connection between the extent of forested edges and its influence on the nesting habitats as the Murrelet.
 
-The connectivity analysis will highlight the links between the critical habitats and classified ecosystems, identifying preferential pathways for the Murrelet as well as barriers to their movement. It is likely that the values of calculated metrics will confirm the fragmentated state of the bird’s habitat and current OGMAs, supporting the need for further improvement of land protection and conservation efforts. It will link the locality and fragmentation of the OGMAs to Gambier's SEM and Murrelet habitat. Ultimately, by identifying critical connections and areas of fragmentation, this study will inform future efforts to reduce habitat loss and improve landscape connectivity for species conservation on Gambier Island. 
-
-Below is an example the Old Growth Management Areas (OGMAs) and the mapped expected habitat of the Marbled Murrelet, and what the Grains of Connectivity analysis for the Marbled Murrelet might be for Gambier Island. Note that these birds can fly long distances and so the example is just to show what the GoC might look like for this landscape.
-
-![Mapped OGMAs and Murrelet Habitat](images/murrelet_OGMA_habitat.png)
-
-![Expected Grains of Connectivity on Gambier Island for Marbled Murrelet](images/murrelet_GoC.png)
-
-
-
-
-
-
-
-
-
-
-
+The connectivity analysis will highlight the links between the critical habitats and classified ecosystems, identifying preferential pathways for the Murrelet as well as barriers to their movement. It is likely that the values of calculated metrics will confirm the fragmentated state of the bird’s habitat and current OGMAs, supporting the need for further improvement of land protection and conservation efforts. It will link the locality and fragmentation of the OGMAs to Gambier's SEM and Murrelet habitat. Ultimately, by identifying critical connections and areas of fragmentation, this study will inform future efforts to reduce habitat loss and improve landscape connectivity for species conservation on Gambier Island.

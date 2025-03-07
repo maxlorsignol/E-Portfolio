@@ -1,9 +1,12 @@
 project:
   type: website
   output-dir: c:\Users\lorsigno.stu\OneDrive - UBC\Desktop\Documents\GitHub\E-Portfolio
+  
+resources:
+  - "Geomatics Resume.pdf"
 
 website:
-  title: "Max's E-Portfolio"
+  title: "Max Lorsignol"
   navbar:
     left:
       - href: index.qmd
@@ -39,7 +42,7 @@ website:
       
 format:
   html:
-    theme: flatly
+    theme: yeti
     toc: true
 
 editor: visual

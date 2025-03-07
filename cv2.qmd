@@ -4,23 +4,21 @@ format: html
 editor: visual
 ---
 
+[Click Here to download the PDF](Geomatics Resume.pdf){download="Max Lorsignol's Resume"}
+
 ## Skills and Certificates
 
 #### GIS and Spatial Data Management
 
--   ArcGIS Pro & QGIS
+-   ArcGIS Pro, QGIS, ENVI, FME
 -   ArcGIS Model Builder and Experience Builder
--   FME (Feature Manipulation Engine) for Workflow Automation
--   PostgreSQL for Spatial Database Management
--   ENVI for Remote Sensing Image Analysis
--   Cartography and Map Design
+-   PostgreSQL for Spatial Databases
+-   Remote Sensing & Cartography
 
 #### Technical & Software Procifiency
 
--   ArcGIS Pro, QGIS, ENVI, FME
--   PostgreSQL
 -   Python, R, SQL
--   Adobe Illustrator, Photoshop, SketchUp, Procreate
+-   Adobe Suite (Illustrator, Photoshop), SketchUp, Procreate
 -   Microsoft Office (Excel, Word, PowerPoint)
 
 #### Certifications & Licenses
@@ -34,7 +32,7 @@ editor: visual
 
 ## Education
 
-![](images/UBC_logo.png) 
+![](images/UBC_logo.png)
 
 -   Masters in Geomatics for Environmental Management UBC Vancouver (2024-2025)
 
