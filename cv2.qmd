@@ -4,7 +4,7 @@ format: html
 editor: visual
 ---
 
-[Click Here to download the PDF](Geomatics Resume.pdf){download="Max Lorsignol's Resume"}
+[Click Here to download the PDF](Geomatics%20Resume.pdf){download="Max Lorsignol's Resume"}
 
 ## Skills and Certificates
 
