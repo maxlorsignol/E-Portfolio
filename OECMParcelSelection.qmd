@@ -21,9 +21,12 @@ library(leaflet)
 library(sf)
 library(rmapshaper)
 library(geojsonsf)
+library(raster)
+library(stars)
+library(leaflet.extras)
 
 # Function to load, transform, and validate spatial data
-process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10) {
+process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10, max_points = 5000) {
   data <- st_read(file_path, quiet = TRUE)
   
   # Reproject to WGS84 if needed
@@ -34,8 +37,16 @@ process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10)
   # Validate geometry
   data <- st_make_valid(data)
   
-  # Simplify geometry if requested
+  # Simplify geometry more aggressively for large datasets
   if (simplify) {
+    # Calculate total vertices
+    approx_vertices <- sum(lengths(st_geometry(data)))
+    
+    # Adjust keep_ratio if we have too many points
+    if (approx_vertices > max_points) {
+      keep_ratio <- min(keep_ratio, max_points / approx_vertices)
+    }
+    
     data <- ms_simplify(data, keep = keep_ratio)
   }
   
@@ -44,24 +55,12 @@ process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10)
   return(data)
 }
 
-# Define all datasets to load - easy to add more
+# Define all datasets to load
 datasets <- list(
-  weighted_layer = list(
-    path = "~/GitHub/E-Portfolio/data/HoweSound_Weig_FeaturesToJSO.gpkg",
-    simplify = TRUE,
-    keep_ratio = 0.05,
-    color_type = "palette",  # Will use a palette
-    weight = 1,
-    fillOpacity = 0.7,
-    group = "Weighted Layer",
-    label_field = "total_weig",
-    label_prefix = "Weight: ",
-    is_oecm_candidate = FALSE
-  ),
   bc_parcel = list(
     path = "~/GitHub/E-Portfolio/data/HoweSound_Parcel_all.shp", 
     simplify = TRUE,
-    keep_ratio = 0.1,
+    keep_ratio = 0.05,  # More aggressive simplification for base layer
     color_type = "fixed",
     color = "grey",
     weight = 1,
@@ -109,145 +108,221 @@ datasets <- list(
   )
 )
 
-lazy_load <- function(name) {
-  if(name == "weighted_layer") {
-    data <- process_spatial_data(
-      datasets[[name]]$path, 
-      datasets[[name]]$simplify,
-      datasets[[name]]$keep_ratio
-    )
-    spatial_data[[name]] <<- data
-    return(data)
+# Create empty list for loaded data
+spatial_data <- list()
+
+# Only load the base parcel layer initially
+tryCatch({
+  name <- "bc_parcel"
+  spatial_data[[name]] <- process_spatial_data(
+    datasets[[name]]$path, 
+    datasets[[name]]$simplify,
+    datasets[[name]]$keep_ratio,
+    max_points = 7500  # Limit to 7500 points
+  )
+  cat("Loaded:", name, "\n")
+}, error = function(e) {
+  cat("Error loading", name, ":", e$message, "\n")
+})
+
+# Function to load OECM candidates and get all owner types
+get_owner_types <- function() {
+  all_owner_types <- c()
+  
+  # Load OECM candidate datasets and collect owner types
+  for (name in c("scrd_parcels", "mvrd_parcels", "slrd_parcels")) {
+    if (is.null(spatial_data[[name]])) {
+      tryCatch({
+        spatial_data[[name]] <<- process_spatial_data(
+          datasets[[name]]$path, 
+          datasets[[name]]$simplify,
+          datasets[[name]]$keep_ratio,
+          max_points = 5000  # Limit to 5000 points per layer
+        )
+        cat("Loaded:", name, "\n")
+        
+        if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
+          all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
+        }
+      }, error = function(e) {
+        cat("Error loading", name, ":", e$message, "\n")
+      })
+    } else if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
+      all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
+    }
   }
-  return(spatial_data[[name]])
+  
+  return(unique(all_owner_types))
 }
 
-# Process all datasets
-spatial_data <- list()
-for (name in names(datasets)) {
+# Load weighted layer directly as raster and mask out pixels with value of 999
+load_raster <- function() {
   tryCatch({
-    spatial_data[[name]] <- process_spatial_data(
-      datasets[[name]]$path, 
-      datasets[[name]]$simplify,
-      datasets[[name]]$keep_ratio
-    )
-    cat("Loaded:", name, "\n")
+    # Load the raster file
+    weighted_raster <- raster("~/GitHub/E-Portfolio/data/hs_weighted_raster.tif")
+    
+    # Aggregate to reduce resolution - adjust factor as needed
+    weighted_raster <- aggregate(weighted_raster, fact=3)
+    
+    # Create a mask for value 999
+    mask <- weighted_raster != 999
+    
+    # Apply the mask to make 999 completely transparent
+    weighted_raster <- mask(weighted_raster, mask)
+    
+    cat("Raster loaded successfully\n")
+    return(weighted_raster)
   }, error = function(e) {
-    cat("Error loading", name, ":", e$message, "\n")
+    cat("Error loading raster:", e$message, "\n")
+    return(NULL)
   })
 }
 
-# Collect all unique OWNER_TYPE values from OECM candidate datasets
+# Start with just the base map
 all_owner_types <- c()
-for (name in names(spatial_data)) {
-  if (datasets[[name]]$is_oecm_candidate && "OWNER_TYPE" %in% names(spatial_data[[name]])) {
-    all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
-  }
-}
-all_owner_types <- unique(all_owner_types)
+weighted_raster <- NULL
 
 # Define the color palettes
-weight_pal <- colorNumeric(palette = "YlGnBu", domain = spatial_data$weighted_layer$total_weig)
 owner_pal <- colorFactor(palette = "Set3", domain = all_owner_types)
+weight_pal <- colorNumeric(palette = "YlGnBu", domain = c(0, 5))
 
 # Initialize the leaflet map
 main_map <- leaflet() %>%
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(
     updateWhenZooming = FALSE,  # Performance improvement
-    updateWhenIdle = TRUE       # Performance improvement
+    updateWhenIdle = TRUE,       # Performance improvement
+    maxZoom = 18
   ))
 
-# Create vector of overlay groups
+# Only add the base layer initially
 overlay_groups <- c()
+base_group <- "BC Parcel Fabric"
 
-
-
-# Add all datasets to the map
-for (name in names(spatial_data)) {
-  dataset_config <- datasets[[name]]
-  data <- lazy_load(name)
+# Add base layer to the map
+if (!is.null(spatial_data[["bc_parcel"]])) {
+  dataset_config <- datasets[["bc_parcel"]]
   
-  # Skip if data is empty or invalid
-  if (is.null(data) || nrow(data) == 0) next
-  
-  # Determine color handling based on color_type
-  if (dataset_config$color_type == "palette") {
-    color_param <- ~weight_pal(total_weig)
-  } else if (dataset_config$color_type == "owner") {
-    color_param <- ~owner_pal(OWNER_TYPE)
-  } else {
-    color_param <- dataset_config$color
-  }
-  
-  # Create label based on specified field
-  label_field <- dataset_config$label_field
-  label_prefix <- dataset_config$label_prefix
-  
-  # Add to map
   main_map <- main_map %>%
     addPolygons(
-      data = data,
-      color = color_param,
+      data = spatial_data[["bc_parcel"]],
+      color = dataset_config$color,
       weight = dataset_config$weight,
       fillOpacity = dataset_config$fillOpacity,
       group = dataset_config$group,
-      label = ~paste0(label_prefix, get(label_field)),
-      # Performance improvements:
-      smoothFactor = 0.5,
-      options = pathOptions(clickable = TRUE),
-      # Disable events for better performance
+      label = ~paste0(dataset_config$label_prefix, get(dataset_config$label_field)),
+      smoothFactor = 1.0,
+      noClip = TRUE,
+      options = pathOptions(
+        clickable = TRUE,
+        maxZoom = 14,
+        renderer = JS("L.canvas()")
+      ),
       highlightOptions = highlightOptions(
         weight = 2,
         bringToFront = TRUE
       )
     )
   
-  # Add to overlay groups
   overlay_groups <- c(overlay_groups, dataset_config$group)
 }
 
-# Create a group for the weights legend
-weights_legend_group <- "Weights Legend"
-
-# Create a group for the owner types legend
-owner_legend_group <- "Owner Types Legend"
-
-# Add both legends as their own groups
+# Center the view
 main_map <- main_map %>%
-  # Add weight legend as a separate group
-  addLegend(
-    position = "bottomright",
-    pal = weight_pal,
-    values = spatial_data$weighted_layer$total_weig,
-    title = "Weight Values",
-    opacity = 0.7,
-    group = weights_legend_group
+  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
+  # Add a layers control for the base layer
+  addLayersControl(
+    overlayGroups = overlay_groups,
+    options = layersControlOptions(collapsed = FALSE)
   ) %>%
-  # Add owner type legend as a separate group
+  # Add fullscreen control
+  addFullscreenControl() %>%
+  # Add reset view button
+  addResetMapButton()
+
+# Get owner types for OECM candidates
+all_owner_types <- get_owner_types()
+owner_pal <- colorFactor(palette = "Set3", domain = all_owner_types)
+
+# Add OECM layers to the map (with optimizations)
+for (name in c("scrd_parcels", "mvrd_parcels", "slrd_parcels")) {
+  if (!is.null(spatial_data[[name]])) {
+    dataset_config <- datasets[[name]]
+    
+    main_map <- main_map %>%
+      addPolygons(
+        data = spatial_data[[name]],
+        color = ~owner_pal(OWNER_TYPE),
+        weight = dataset_config$weight,
+        fillOpacity = dataset_config$fillOpacity,
+        group = dataset_config$group,
+        label = ~paste0(dataset_config$label_prefix, OWNER_TYPE),
+        smoothFactor = 1.0,
+        noClip = TRUE,
+        options = pathOptions(
+          clickable = TRUE,
+          maxZoom = 14,
+          renderer = JS("L.canvas()")
+        ),
+        highlightOptions = highlightOptions(
+          weight = 2,
+          bringToFront = TRUE
+        )
+      )
+    
+    overlay_groups <- c(overlay_groups, dataset_config$group)
+  }
+}
+
+# Add owner type legend
+main_map <- main_map %>%
   addLegend(
     position = "bottomright",
     pal = owner_pal,
     values = all_owner_types,
     title = "Owner Types",
     opacity = 0.7,
-    group = owner_legend_group
+    group = "Owner Types Legend"
   )
 
-# Add legend groups to the overlay groups
-overlay_groups <- c(overlay_groups, weights_legend_group, owner_legend_group)
+overlay_groups <- c(overlay_groups, "Owner Types Legend")
 
-# Finish map setup
+# Load raster with reduced resolution
+weighted_raster <- load_raster()
+
+if (!is.null(weighted_raster)) {
+  raster_min <- cellStats(weighted_raster, min, na.rm = TRUE)
+  raster_max <- cellStats(weighted_raster, max, na.rm = TRUE)
+  weight_pal <- colorNumeric(palette = "YlGnBu", domain = c(raster_min, raster_max))
+  
+  main_map <- main_map %>%
+    addRasterImage(
+      weighted_raster,
+      colors = weight_pal,
+      opacity = 0.7,
+      group = "Weighted Layer"
+    ) %>%
+    addLegend(
+      position = "bottomright",
+      pal = weight_pal,
+      values = c(raster_min, raster_max),
+      title = "Weight Values",
+      opacity = 0.7,
+      group = "Weights Legend"
+    )
+  
+  # Update overlay groups to include these new groups
+  overlay_groups <- c(overlay_groups, "Weighted Layer", "Weights Legend")
+}
+
+# Update layer controls and hide the weighted layer and weights legend by default
 main_map <- main_map %>%
-  # Center the view
-  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
-  # Add a layers control for toggling layers (including legends)
   addLayersControl(
     overlayGroups = overlay_groups,
     options = layersControlOptions(collapsed = FALSE)
   ) %>%
-  # Hide weighted layer and weights legend by default
   hideGroup("Weighted Layer") %>%
-  hideGroup(weights_legend_group)
+  hideGroup("Weights Legend") %>% 
+  hideGroup("BC Parcel Fabric")
 
 # Display the map
 main_map
