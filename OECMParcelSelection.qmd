@@ -14,86 +14,243 @@ Each hexagon has a value based on the ecological sensitivity, critical habitat, 
 
 Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change.
 
-```{r leaflet, echo=FALSE, warning=FALSE, message=FALSE}
+```{r leaflet, echo=FALSE, message=FALSE, warning=FALSE}
+
 library(dplyr)
 library(leaflet)
 library(sf)
 library(rmapshaper)
+library(geojsonsf)
 
-# Load the main weighted layer
-oecm_data <- st_read("data/HoweSound_Weig_FeaturesToJSO.gpkg", quiet=TRUE)
-
-# Load additional shapefile layers
-bc_parcel_fabric <- st_read("data/HoweSound_Parcel_all.shp", quiet=TRUE)
-selected_parcels <- st_read("data/HoweSound_Parcels_selected.shp", quiet=TRUE)
-
-
-# Check CRS and reproject to WGS84 if necessary
-if (st_crs(oecm_data)$epsg != 4326) {
-  oecm_data <- st_transform(oecm_data, crs = 4326)
-}
-if (st_crs(bc_parcel_fabric)$epsg != 4326) {
-  bc_parcel_fabric <- st_transform(bc_parcel_fabric, crs = 4326)
-}
-if (st_crs(selected_parcels)$epsg != 4326) {
-  selected_parcels <- st_transform(selected_parcels, crs = 4326)
-}
-
-# Validate the geometry
-oecm_data <- st_make_valid(oecm_data)
-bc_parcel_fabric <- st_make_valid(bc_parcel_fabric)
-selected_parcels <- st_make_valid(selected_parcels)
-
-# simplify geometries
-oecm_data_simple <- ms_simplify(oecm_data, keep = 0.10)
-
-# Define a color palette based on a column (e.g., "CategoryColumn")
-pal <- colorNumeric(palette = "YlGnBu", domain = oecm_data$total_weig)
-
-# Create the Leaflet map with multiple toggleable layers
-main_map <- leaflet() %>%
-  addProviderTiles("CartoDB.Positron") %>%
+# Function to load, transform, and validate spatial data
+process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10) {
+  data <- st_read(file_path, quiet = TRUE)
   
-  # Add the main weighted layer
-  addPolygons(
-    data = oecm_data_simple,
-    color = ~pal(total_weig),
+  # Reproject to WGS84 if needed
+  if (st_crs(data)$epsg != 4326) {
+    data <- st_transform(data, crs = 4326)
+  }
+  
+  # Validate geometry
+  data <- st_make_valid(data)
+  
+  # Simplify geometry if requested
+  if (simplify) {
+    data <- ms_simplify(data, keep = keep_ratio)
+  }
+  
+  data <- sf_geojson(data) %>% geojson_sf()
+  
+  return(data)
+}
+
+# Define all datasets to load - easy to add more
+datasets <- list(
+  weighted_layer = list(
+    path = "~/GitHub/E-Portfolio/data/HoweSound_Weig_FeaturesToJSO.gpkg",
+    simplify = TRUE,
+    keep_ratio = 0.05,
+    color_type = "palette",  # Will use a palette
     weight = 1,
     fillOpacity = 0.7,
     group = "Weighted Layer",
-    label = ~paste0("Category: ", total_weig)
-  ) %>%
-  
-  # Add the BC Parcel Fabric layer (update the label field as needed)
-  addPolygons(
-    data = bc_parcel_fabric,
-    color = "red",
+    label_field = "total_weig",
+    label_prefix = "Weight: ",
+    is_oecm_candidate = FALSE
+  ),
+  bc_parcel = list(
+    path = "~/GitHub/E-Portfolio/data/HoweSound_Parcel_all.shp", 
+    simplify = TRUE,
+    keep_ratio = 0.1,
+    color_type = "fixed",
+    color = "grey",
     weight = 1,
     fillOpacity = 0.3,
     group = "BC Parcel Fabric",
-    label = ~paste0("Parcel: ", PARCEL_POL)  # replace 'parcel_id' with the actual field name
-  ) %>%
-  
-  # Add the OECM Candidates layer (update the label field as needed)
-  addPolygons(
-    data = selected_parcels,
-    color = "blue",
+    label_field = "PARCEL_POL",
+    label_prefix = "Parcel: ",
+    is_oecm_candidate = FALSE
+  ),
+  scrd_parcels = list(
+    path = "~/GitHub/E-Portfolio/data/SCRD_oecm_candidates.shp",
+    simplify = TRUE,
+    keep_ratio = 0.1,
+    color_type = "owner",  # Will use owner type palette
     weight = 1,
     fillOpacity = 0.5,
-    group = "OECM Candidates",
-    label = ~paste0("Parcel: ", PARCEL_POL)  # replace 'parcel_id' with the actual field name
-    ) %>%
+    group = "SCRD OECM Candidates",
+    label_field = "OWNER_TYPE",
+    label_prefix = "Owner: ",
+    is_oecm_candidate = TRUE
+  ),
+  mvrd_parcels = list(
+    path = "~/GitHub/E-Portfolio/data/MVRD_oecm_candidates.shp",
+    simplify = TRUE,
+    keep_ratio = 0.1,
+    color_type = "owner",  # Will use owner type palette
+    weight = 1,
+    fillOpacity = 0.5,
+    group = "MVRD OECM Candidates",
+    label_field = "OWNER_TYPE",
+    label_prefix = "Owner: ",
+    is_oecm_candidate = TRUE
+  ),
+  slrd_parcels = list(
+    path = "~/GitHub/E-Portfolio/data/SLRD_oecm_candidates.shp",
+    simplify = TRUE,
+    keep_ratio = 0.1,
+    color_type = "owner",  # Will use owner type palette
+    weight = 1,
+    fillOpacity = 0.5,
+    group = "SLRD OECM Candidates",
+    label_field = "OWNER_TYPE",
+    label_prefix = "Owner: ",
+    is_oecm_candidate = TRUE
+  )
+)
+
+lazy_load <- function(name) {
+  if(name == "weighted_layer") {
+    data <- process_spatial_data(
+      datasets[[name]]$path, 
+      datasets[[name]]$simplify,
+      datasets[[name]]$keep_ratio
+    )
+    spatial_data[[name]] <<- data
+    return(data)
+  }
+  return(spatial_data[[name]])
+}
+
+# Process all datasets
+spatial_data <- list()
+for (name in names(datasets)) {
+  tryCatch({
+    spatial_data[[name]] <- process_spatial_data(
+      datasets[[name]]$path, 
+      datasets[[name]]$simplify,
+      datasets[[name]]$keep_ratio
+    )
+    cat("Loaded:", name, "\n")
+  }, error = function(e) {
+    cat("Error loading", name, ":", e$message, "\n")
+  })
+}
+
+# Collect all unique OWNER_TYPE values from OECM candidate datasets
+all_owner_types <- c()
+for (name in names(spatial_data)) {
+  if (datasets[[name]]$is_oecm_candidate && "OWNER_TYPE" %in% names(spatial_data[[name]])) {
+    all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
+  }
+}
+all_owner_types <- unique(all_owner_types)
+
+# Define the color palettes
+weight_pal <- colorNumeric(palette = "YlGnBu", domain = spatial_data$weighted_layer$total_weig)
+owner_pal <- colorFactor(palette = "Set3", domain = all_owner_types)
+
+# Initialize the leaflet map
+main_map <- leaflet() %>%
+  addProviderTiles("CartoDB.Positron", options = providerTileOptions(
+    updateWhenZooming = FALSE,  # Performance improvement
+    updateWhenIdle = TRUE       # Performance improvement
+  ))
+
+# Create vector of overlay groups
+overlay_groups <- c()
+
+
+
+# Add all datasets to the map
+for (name in names(spatial_data)) {
+  dataset_config <- datasets[[name]]
+  data <- lazy_load(name)
   
-  # Center the view (update coordinates as desired)
-  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
+  # Skip if data is empty or invalid
+  if (is.null(data) || nrow(data) == 0) next
   
-  # Add a layers control for toggling layers on and off
-  addLayersControl(
-    overlayGroups = c("Weighted Layer", "BC Parcel Fabric", "OECM Candidates"),
-    options = layersControlOptions(collapsed = FALSE)
+  # Determine color handling based on color_type
+  if (dataset_config$color_type == "palette") {
+    color_param <- ~weight_pal(total_weig)
+  } else if (dataset_config$color_type == "owner") {
+    color_param <- ~owner_pal(OWNER_TYPE)
+  } else {
+    color_param <- dataset_config$color
+  }
+  
+  # Create label based on specified field
+  label_field <- dataset_config$label_field
+  label_prefix <- dataset_config$label_prefix
+  
+  # Add to map
+  main_map <- main_map %>%
+    addPolygons(
+      data = data,
+      color = color_param,
+      weight = dataset_config$weight,
+      fillOpacity = dataset_config$fillOpacity,
+      group = dataset_config$group,
+      label = ~paste0(label_prefix, get(label_field)),
+      # Performance improvements:
+      smoothFactor = 0.5,
+      options = pathOptions(clickable = TRUE),
+      # Disable events for better performance
+      highlightOptions = highlightOptions(
+        weight = 2,
+        bringToFront = TRUE
+      )
+    )
+  
+  # Add to overlay groups
+  overlay_groups <- c(overlay_groups, dataset_config$group)
+}
+
+# Create a group for the weights legend
+weights_legend_group <- "Weights Legend"
+
+# Create a group for the owner types legend
+owner_legend_group <- "Owner Types Legend"
+
+# Add both legends as their own groups
+main_map <- main_map %>%
+  # Add weight legend as a separate group
+  addLegend(
+    position = "bottomright",
+    pal = weight_pal,
+    values = spatial_data$weighted_layer$total_weig,
+    title = "Weight Values",
+    opacity = 0.7,
+    group = weights_legend_group
+  ) %>%
+  # Add owner type legend as a separate group
+  addLegend(
+    position = "bottomright",
+    pal = owner_pal,
+    values = all_owner_types,
+    title = "Owner Types",
+    opacity = 0.7,
+    group = owner_legend_group
   )
 
+# Add legend groups to the overlay groups
+overlay_groups <- c(overlay_groups, weights_legend_group, owner_legend_group)
+
+# Finish map setup
+main_map <- main_map %>%
+  # Center the view
+  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
+  # Add a layers control for toggling layers (including legends)
+  addLayersControl(
+    overlayGroups = overlay_groups,
+    options = layersControlOptions(collapsed = FALSE)
+  ) %>%
+  # Hide weighted layer and weights legend by default
+  hideGroup("Weighted Layer") %>%
+  hideGroup(weights_legend_group)
+
+# Display the map
 main_map
 ```
 
-Please be patient with the interactive map, as the weighted suitability layer is quite large. Feel free to toggle off the layer if this page is running poorly.
+*Please be patient with the interactive map, as the weighted suitability layer is quite large. Feel free to toggle off some layers if this page is running poorly.*
