@@ -386,4 +386,3 @@ main_map
 
 ```
 
-*Please be patient with the interactive map, as the weighted suitability layer is quite large. Feel free to toggle off some layers if this page is running poorly.*
