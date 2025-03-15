@@ -4,15 +4,11 @@ format: html
 editor: visual
 ---
 
-This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from BC Parcel Data, CPCAD, and ecological sensitivity datasets, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a "mesh sensitivity layer" that integrates critical habitat data, forest age (\>200 years), and proximity to streams, combined with parcel attributes like ownership and zoning.
+This project focuses on identifying and designating Other Effective Area-Based Conservation Measures (OECMs) within the Átl’ḵa7tsem/Howe Sound Biosphere Region. Using geospatial data from a variety of sources, the study aims to assess parcels of land for their potential to support biodiversity conservation while meeting the criteria for OECM designation. The methodology involves creating a weighted suitability model that integrates critical habitat data, forest age, slope, streams buffer, parks buffer, wetlands and watersheds to make an initial parcel selection from the BC Parcel Fabric. Inital parcels are then further filtered by parcel attributes like ownership, class and zoning.
 
-Spatial analysis, guided by a decision support tool, evaluates parcels based on ecological sensitivity, proximity to existing conservation areas, and governance capacity. The project also examines differences across regional districts (Metro Vancouver, Sunshine Coast, Squamish Lillooet), aiming to prioritize parcels that are unprotected but ecologically significant. Expected results include a map of high-priority OECM candidates, helping to enhance biodiversity conservation while contributing to Canada’s broader conservation goals under the CBD’s Aichi Targets.
+In the Weighted Layer, each hexagon has a value based on the a weighted suitability model. Darker values represent more sensitive areas and lighter values are less sensitive.
 
-Each hexagon has a value based on the ecological sensitivity, critical habitat, forest age, proximity to streams and slope steepness. Darker values represent more sensitive areas and are used to select parcels of land from the BC Parcel Fabric layer in order to locate pieces of land that could be considered as OECM.
-
-## BC Fabric Parcel Selection
-
-Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh where the total_weight is above a specified threshold. In the example below, a conservative value of 2.6, well above the mean, is used to select parcels. The resulting parcels can be seen below. These parcels are then categorized based on their zoning, OCP and municipality. A final list of potential OECMs are given to Howe Sound Biosphere Region Initiative Society (HSBRIS) for them to follow up with those selected parcels and organize an approach to start the land designation change.
+Using the suitability mesh layer in conjunction with the BC Fabric Parcel layer, I can select parcels that intersect with areas of the mesh based on a specified threshold. These parcels are then categorized based on their zoning, OCP and municipality. The resulting parcels can be seen below.
 
 ```{r leaflet, echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -25,42 +21,98 @@ library(raster)
 library(stars)
 library(leaflet.extras)
 
+#------------------------------------------------------------------------------
+# HELPER FUNCTIONS
+#------------------------------------------------------------------------------
+
 # Function to load, transform, and validate spatial data
-process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10, max_points = 5000) {
+# Now accepts a default_crs parameter to assign a CRS if missing
+process_spatial_data <- function(file_path, simplify = FALSE, keep_ratio = 0.10, max_points = 5000, default_crs = NA) {
+  # Read the shapefile
   data <- st_read(file_path, quiet = TRUE)
   
-  # Reproject to WGS84 if needed
-  if (st_crs(data)$epsg != 4326) {
+  # If CRS is missing and a default is provided, directly assign the default CRS without reprojecting
+  if (is.na(st_crs(data)$epsg) && !is.na(default_crs)) {
+    attr(data, "crs") <- st_crs(default_crs)
+  }
+  
+  # Reproject to WGS84 if needed (leaflet requires EPSG:4326)
+  if (!is.na(st_crs(data)$epsg) && st_crs(data)$epsg != 4326) {
     data <- st_transform(data, crs = 4326)
   }
   
-  # Validate geometry
+  # Validate geometry to fix any topology issues
   data <- st_make_valid(data)
   
-  # Simplify geometry more aggressively for large datasets
+  # Simplify geometry if needed
   if (simplify) {
-    # Calculate total vertices
     approx_vertices <- sum(lengths(st_geometry(data)))
-    
-    # Adjust keep_ratio if we have too many points
     if (approx_vertices > max_points) {
       keep_ratio <- min(keep_ratio, max_points / approx_vertices)
     }
-    
     data <- ms_simplify(data, keep = keep_ratio)
   }
   
+  # Convert to GeoJSON and back to SF for compatibility
   data <- sf_geojson(data) %>% geojson_sf()
   
   return(data)
 }
 
-# Define all datasets to load
+# Function to load OECM candidates and get all owner types for the legend
+get_owner_types <- function() {
+  all_owner_types <- c()
+  
+  # Load consolidated OECM dataset
+  name <- "all_oecm_parcels"
+  if (is.null(spatial_data[[name]])) {
+    tryCatch({
+      spatial_data[[name]] <<- process_spatial_data(
+        datasets[[name]]$path, 
+        datasets[[name]]$simplify,
+        datasets[[name]]$keep_ratio,
+        max_points = 10000  # Increased limit for combined layer
+      )
+      cat("Loaded:", name, "\n")
+      
+      if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
+        all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
+      }
+    }, error = function(e) {
+      cat("Error loading", name, ":", e$message, "\n")
+    })
+  } else if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
+    all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
+  }
+  
+  return(unique(all_owner_types))
+}
+
+# Improved function to load raster with complete transparency for masked areas
+load_raster <- function() {
+  tryCatch({
+    weighted_raster <- raster("~/GitHub/E-Portfolio/data/hs_weighted_raster.tif")
+    weighted_raster <- aggregate(weighted_raster, fact = 3)
+    weighted_raster[weighted_raster == 999] <- NA
+    cat("Raster loaded successfully\n")
+    return(weighted_raster)
+  }, error = function(e) {
+    cat("Error loading raster:", e$message, "\n")
+    return(NULL)
+  })
+}
+
+#------------------------------------------------------------------------------
+# DATASET DEFINITIONS
+#------------------------------------------------------------------------------
+
+# Define all datasets to load with their configurations
 datasets <- list(
+  # Base parcel layer
   bc_parcel = list(
-    path = "~/GitHub/E-Portfolio/data/HoweSound_Parcel_all.shp", 
+    path = "C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/HoweSound_Parcel_all.shp", 
     simplify = TRUE,
-    keep_ratio = 0.05,  # More aggressive simplification for base layer
+    keep_ratio = 0.05,
     color_type = "fixed",
     color = "grey",
     weight = 1,
@@ -70,138 +122,107 @@ datasets <- list(
     label_prefix = "Parcel: ",
     is_oecm_candidate = FALSE
   ),
-  scrd_parcels = list(
-    path = "~/GitHub/E-Portfolio/data/SCRD_oecm_candidates.shp",
+  
+  # Consolidated OECM parcels
+  all_oecm_parcels = list(
+    path = "C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/selected_parcels_all_RD_for_github.shp",
     simplify = TRUE,
     keep_ratio = 0.1,
-    color_type = "owner",  # Will use owner type palette
+    color_type = "owner",
     weight = 1,
     fillOpacity = 0.5,
-    group = "SCRD OECM Candidates",
+    group = "OECM Candidates",
     label_field = "OWNER_TYPE",
     label_prefix = "Owner: ",
     is_oecm_candidate = TRUE
   ),
-  mvrd_parcels = list(
-    path = "~/GitHub/E-Portfolio/data/MVRD_oecm_candidates.shp",
+  
+  # Currently protected areas (CPCAD layer)
+  protected_areas = list(
+    path = "C:/Users/lorsigno.stu/Documents/GitHub/E-Portfolio/data/cpcad_currently_protected_hs.shp",
     simplify = TRUE,
     keep_ratio = 0.1,
-    color_type = "owner",  # Will use owner type palette
+    color_type = "fixed",
+    color = "#00FF00",
     weight = 1,
-    fillOpacity = 0.5,
-    group = "MVRD OECM Candidates",
-    label_field = "OWNER_TYPE",
-    label_prefix = "Owner: ",
-    is_oecm_candidate = TRUE
-  ),
-  slrd_parcels = list(
-    path = "~/GitHub/E-Portfolio/data/SLRD_oecm_candidates.shp",
-    simplify = TRUE,
-    keep_ratio = 0.1,
-    color_type = "owner",  # Will use owner type palette
-    weight = 1,
-    fillOpacity = 0.5,
-    group = "SLRD OECM Candidates",
-    label_field = "OWNER_TYPE",
-    label_prefix = "Owner: ",
-    is_oecm_candidate = TRUE
+    fillOpacity = 0.2,
+    group = "Protected Areas",
+    label_field = "NAME_E",
+    label_prefix = "Protected Area: ",
+    is_oecm_candidate = FALSE,
+    default_crs = 3005  # Set the default CRS for the CPCAD layer (adjust if needed)
   )
 )
+
+#------------------------------------------------------------------------------
+# DATA LOADING
+#------------------------------------------------------------------------------
 
 # Create empty list for loaded data
 spatial_data <- list()
 
-# Only load the base parcel layer initially
+# Load base parcel layer
 tryCatch({
   name <- "bc_parcel"
   spatial_data[[name]] <- process_spatial_data(
     datasets[[name]]$path, 
     datasets[[name]]$simplify,
     datasets[[name]]$keep_ratio,
-    max_points = 7500  # Limit to 7500 points
+    max_points = 7500
   )
   cat("Loaded:", name, "\n")
 }, error = function(e) {
   cat("Error loading", name, ":", e$message, "\n")
 })
 
-# Function to load OECM candidates and get all owner types
-get_owner_types <- function() {
-  all_owner_types <- c()
-  
-  # Load OECM candidate datasets and collect owner types
-  for (name in c("scrd_parcels", "mvrd_parcels", "slrd_parcels")) {
-    if (is.null(spatial_data[[name]])) {
-      tryCatch({
-        spatial_data[[name]] <<- process_spatial_data(
-          datasets[[name]]$path, 
-          datasets[[name]]$simplify,
-          datasets[[name]]$keep_ratio,
-          max_points = 5000  # Limit to 5000 points per layer
-        )
-        cat("Loaded:", name, "\n")
-        
-        if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
-          all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
-        }
-      }, error = function(e) {
-        cat("Error loading", name, ":", e$message, "\n")
-      })
-    } else if ("OWNER_TYPE" %in% names(spatial_data[[name]])) {
-      all_owner_types <- c(all_owner_types, unique(spatial_data[[name]]$OWNER_TYPE))
-    }
-  }
-  
-  return(unique(all_owner_types))
-}
+# Load protected areas layer with the default CRS if missing
+tryCatch({
+  name <- "protected_areas"
+  spatial_data[[name]] <- process_spatial_data(
+    datasets[[name]]$path, 
+    datasets[[name]]$simplify,
+    datasets[[name]]$keep_ratio,
+    max_points = 7500,
+    default_crs = datasets[[name]]$default_crs
+  )
+  cat("Loaded:", name, "\n")
+}, error = function(e) {
+  cat("Error loading", name, ":", e$message, "\n")
+})
 
-# Load weighted layer directly as raster and mask out pixels with value of 999
-load_raster <- function() {
-  tryCatch({
-    # Load the raster file
-    weighted_raster <- raster("~/GitHub/E-Portfolio/data/hs_weighted_raster.tif")
-    
-    # Aggregate to reduce resolution - adjust factor as needed
-    weighted_raster <- aggregate(weighted_raster, fact=3)
-    
-    # Create a mask for value 999
-    mask <- weighted_raster != 999
-    
-    # Apply the mask to make 999 completely transparent
-    weighted_raster <- mask(weighted_raster, mask)
-    
-    cat("Raster loaded successfully\n")
-    return(weighted_raster)
-  }, error = function(e) {
-    cat("Error loading raster:", e$message, "\n")
-    return(NULL)
-  })
-}
-
-# Start with just the base map
+# Initialize variables
 all_owner_types <- c()
 weighted_raster <- NULL
+
+# Get OECM owner types for color palette
+all_owner_types <- get_owner_types()
 
 # Define the color palettes
 owner_pal <- colorFactor(palette = "Set3", domain = all_owner_types)
 weight_pal <- colorNumeric(palette = "YlGnBu", domain = c(0, 5))
 
-# Initialize the leaflet map
+# Load raster with improved masking
+weighted_raster <- load_raster()
+
+#------------------------------------------------------------------------------
+# MAP CREATION
+#------------------------------------------------------------------------------
+
 main_map <- leaflet() %>%
   addProviderTiles("CartoDB.Positron", options = providerTileOptions(
-    updateWhenZooming = FALSE,  # Performance improvement
-    updateWhenIdle = TRUE,       # Performance improvement
+    updateWhenZooming = FALSE,
+    updateWhenIdle = TRUE,
     maxZoom = 18
   ))
 
-# Only add the base layer initially
 overlay_groups <- c()
-base_group <- "BC Parcel Fabric"
 
-# Add base layer to the map
+#------------------------------------------------------------------------------
+# ADD BASE PARCEL LAYER
+#------------------------------------------------------------------------------
+
 if (!is.null(spatial_data[["bc_parcel"]])) {
   dataset_config <- datasets[["bc_parcel"]]
-  
   main_map <- main_map %>%
     addPolygons(
       data = spatial_data[["bc_parcel"]],
@@ -222,84 +243,114 @@ if (!is.null(spatial_data[["bc_parcel"]])) {
         bringToFront = TRUE
       )
     )
-  
   overlay_groups <- c(overlay_groups, dataset_config$group)
 }
 
-# Center the view
-main_map <- main_map %>%
-  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
-  # Add a layers control for the base layer
-  addLayersControl(
-    overlayGroups = overlay_groups,
-    options = layersControlOptions(collapsed = FALSE)
-  ) %>%
-  # Add fullscreen control
-  addFullscreenControl() %>%
-  # Add reset view button
-  addResetMapButton()
+#------------------------------------------------------------------------------
+# ADD PROTECTED AREAS LAYER
+#------------------------------------------------------------------------------
 
-# Get owner types for OECM candidates
-all_owner_types <- get_owner_types()
-owner_pal <- colorFactor(palette = "Set3", domain = all_owner_types)
-
-# Add OECM layers to the map (with optimizations)
-for (name in c("scrd_parcels", "mvrd_parcels", "slrd_parcels")) {
-  if (!is.null(spatial_data[[name]])) {
-    dataset_config <- datasets[[name]]
-    
-    main_map <- main_map %>%
-      addPolygons(
-        data = spatial_data[[name]],
-        color = ~owner_pal(OWNER_TYPE),
-        weight = dataset_config$weight,
-        fillOpacity = dataset_config$fillOpacity,
-        group = dataset_config$group,
-        label = ~paste0(dataset_config$label_prefix, OWNER_TYPE),
-        smoothFactor = 1.0,
-        noClip = TRUE,
-        options = pathOptions(
-          clickable = TRUE,
-          maxZoom = 14,
-          renderer = JS("L.canvas()")
-        ),
-        highlightOptions = highlightOptions(
-          weight = 2,
-          bringToFront = TRUE
-        )
-      )
-    
-    overlay_groups <- c(overlay_groups, dataset_config$group)
+if (!is.null(spatial_data[["protected_areas"]])) {
+  dataset_config <- datasets[["protected_areas"]]
+  label_field <- dataset_config$label_field
+  if (!label_field %in% names(spatial_data[["protected_areas"]])) {
+    char_fields <- names(spatial_data[["protected_areas"]])[
+      sapply(spatial_data[["protected_areas"]], is.character)
+    ]
+    if (length(char_fields) > 0) {
+      label_field <- char_fields[1]
+    } else {
+      label_field <- names(spatial_data[["protected_areas"]])[1]
+    }
   }
+  main_map <- main_map %>%
+    addPolygons(
+      data = spatial_data[["protected_areas"]],
+      color = dataset_config$color,
+      weight = dataset_config$weight,
+      fillOpacity = dataset_config$fillOpacity,
+      fillColor = dataset_config$color,
+      group = dataset_config$group,
+      label = ~paste0(dataset_config$label_prefix, get(label_field)),
+      smoothFactor = 1.0,
+      noClip = TRUE,
+      options = pathOptions(
+        clickable = TRUE,
+        maxZoom = 14,
+        renderer = JS("L.canvas()")
+      ),
+      highlightOptions = highlightOptions(
+        weight = 2,
+        color = "#32CD32",
+        bringToFront = TRUE
+      )
+    )
+  overlay_groups <- c(overlay_groups, dataset_config$group)
 }
 
-# Add owner type legend
-main_map <- main_map %>%
-  addLegend(
-    position = "bottomright",
-    pal = owner_pal,
-    values = all_owner_types,
-    title = "Owner Types",
-    opacity = 0.7,
-    group = "Owner Types Legend"
-  )
+#------------------------------------------------------------------------------
+# ADD OECM CANDIDATES LAYER
+#------------------------------------------------------------------------------
 
-overlay_groups <- c(overlay_groups, "Owner Types Legend")
+name <- "all_oecm_parcels"
+if (!is.null(spatial_data[[name]])) {
+  dataset_config <- datasets[[name]]
+  main_map <- main_map %>%
+    addPolygons(
+      data = spatial_data[[name]],
+      color = ~owner_pal(OWNER_TYPE),
+      weight = dataset_config$weight,
+      fillOpacity = dataset_config$fillOpacity,
+      group = dataset_config$group,
+      label = ~paste0(dataset_config$label_prefix, OWNER_TYPE),
+      smoothFactor = 1.0,
+      noClip = TRUE,
+      options = pathOptions(
+        clickable = TRUE,
+        maxZoom = 14,
+        renderer = JS("L.canvas()")
+      ),
+      highlightOptions = highlightOptions(
+        weight = 2,
+        bringToFront = TRUE
+      )
+    )
+  overlay_groups <- c(overlay_groups, dataset_config$group)
+}
 
-# Load raster with reduced resolution
-weighted_raster <- load_raster()
+#------------------------------------------------------------------------------
+# ADD OWNER TYPE LEGEND
+#------------------------------------------------------------------------------
+
+if (length(all_owner_types) > 0) {
+  main_map <- main_map %>%
+    addLegend(
+      position = "bottomright",
+      pal = owner_pal,
+      values = all_owner_types,
+      title = "Owner Types",
+      opacity = 0.7,
+      group = "Owner Types Legend"
+    )
+  overlay_groups <- c(overlay_groups, "Owner Types Legend")
+}
+
+#------------------------------------------------------------------------------
+# ADD WEIGHTED RASTER LAYER
+#------------------------------------------------------------------------------
 
 if (!is.null(weighted_raster)) {
   raster_min <- cellStats(weighted_raster, min, na.rm = TRUE)
   raster_max <- cellStats(weighted_raster, max, na.rm = TRUE)
-  weight_pal <- colorNumeric(palette = "YlGnBu", domain = c(raster_min, raster_max))
+  weight_pal <- colorNumeric(palette = "YlGnBu", domain = c(raster_min, raster_max), na.color = "transparent")
   
   main_map <- main_map %>%
     addRasterImage(
       weighted_raster,
       colors = weight_pal,
       opacity = 0.7,
-      group = "Weighted Layer"
+      group = "Weighted Layer",
+      project = FALSE
     ) %>%
     addLegend(
       position = "bottomright",
@@ -309,23 +360,30 @@ if (!is.null(weighted_raster)) {
       opacity = 0.7,
       group = "Weights Legend"
     )
-  
-  # Update overlay groups to include these new groups
   overlay_groups <- c(overlay_groups, "Weighted Layer", "Weights Legend")
 }
 
-# Update layer controls and hide the weighted layer and weights legend by default
+#------------------------------------------------------------------------------
+# FINALIZE MAP
+#------------------------------------------------------------------------------
+
 main_map <- main_map %>%
+  setView(lng = -123.155, lat = 49.7016, zoom = 12) %>%
+  addFullscreenControl() %>%
+  addResetMapButton() %>%
   addLayersControl(
     overlayGroups = overlay_groups,
     options = layersControlOptions(collapsed = FALSE)
   ) %>%
   hideGroup("Weighted Layer") %>%
-  hideGroup("Weights Legend") %>% 
-  hideGroup("BC Parcel Fabric")
+  hideGroup("Weights Legend") %>%
+  hideGroup("BC Parcel Fabric") %>%
+  hideGroup("Protected Areas")
 
 # Display the map
 main_map
+
+
 ```
 
 *Please be patient with the interactive map, as the weighted suitability layer is quite large. Feel free to toggle off some layers if this page is running poorly.*
